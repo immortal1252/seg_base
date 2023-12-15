@@ -1,0 +1,31 @@
+# small unet+relu+20 小学习率
+dataset:
+  name: mask
+  root_dir: /data/litong/llm_aug-copy/Dataset_BUSI
+  train_file: labeled20.txt
+# training
+epochs: 110
+valid_start_epoch: 40
+batch_size: 8
+save_path: ./unet_small
+
+opt:
+  name: adam
+  lr: 0.0002
+
+scheduler:
+  name: plat
+  verbose: True
+  factor: 0.85
+  mode: max
+
+criterion:
+  - name: bce
+    weight: 1
+
+model:
+  name: unet
+  in_channels: 3
+  n_classes: 1
+  out_channels: [32, 64, 128, 256, 512]
+  act: leakyrelu

@@ -1,0 +1,39 @@
+# small leakyrelu ratio20
+dataset: 
+  name: weak_strong
+  root_dir: /data/litong/llm_aug-copy/Dataset_BUSI
+  train_file: unlabeled20.txt
+  # train_file: labeled20.txt
+
+
+# nclass: 1
+
+# training
+epochs: 110
+valid_start_epoch: 0
+batch_size: 8
+save_path: ./semi
+
+semi:
+  pretrained: ./20base/best.pt
+
+opt:
+  name: adam
+  lr: 0.000002
+
+scheduler:
+  name: plat
+  verbose: True
+  factor: 0.85
+  mode: max
+
+criterion:
+  - name: bce
+    weight: 1
+
+model:
+  name: unet
+  in_channels: 3
+  n_classes: 1
+  out_channels: [32, 64, 128, 256, 512]
+  act: leakyrelu

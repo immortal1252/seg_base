@@ -1,0 +1,33 @@
+# small leakyrelu ratio20
+dataset: 
+  root_dir: /data/litong/llm_aug-copy/Dataset_BUSI
+  train_filenames: labeled20.txt
+
+# nclass: 1
+
+# training
+epochs: 110
+valid_start_epoch: 40
+batch_size: 8
+save_path: ./unet_small
+
+opt:
+  name: adam
+  lr: 0.0002
+
+scheduler:
+  name: plat
+  verbose: True
+  factor: 0.85
+  mode: max
+
+criterion:
+  - name: bce
+    weight: 1
+
+model:
+  name: unet
+  in_channels: 3
+  n_classes: 1
+  out_channels: [32, 64, 128, 256, 512]
+  act: leakyrelu
