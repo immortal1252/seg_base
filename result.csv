@@ -12,3 +12,12 @@ UNet,0.5168101262356147,0.5168101262356147,Adam,0.0002,ReduceLROnPlateau,./confi
 UNet,0.5709349795887818,0.5709349795887818,Adam,0.0002,ReduceLROnPlateau,./configs/unet_base_leakyrelu20.yaml,
 UNet,0.5303414227540004,0.5303414227540004,Adam,0.0002,ReduceLROnPlateau,./configs/unet_base_leakyrelu20_2.yaml,
 UNet,0.5703740251951691,0.5703740251951691,Adam,0.0002,ReduceLROnPlateau,./configs/unet_base_leakyrelu20.yaml,
+UNet,0.5771916876707456,0.5771916876707456,Adam,0.001,ReduceLROnPlateau,./configs/unet_base_20.yaml,
+UNet,0.5958839269318609,0.5958839269318609,Adam,0.0002,ReduceLROnPlateau,./configs/unet_base_20_2.yaml,
+UNet,0.6144685898109418,0.6144685898109418,Adam,0.0002,MultiStepLR,./configs/unet_base_20_3.yaml,
+UNet,0.1827315452330103,0.1827315452330103,Adam,0.0002,ReduceLROnPlateau,configs/semi_base.yaml,
+UNetComposedLossSupervised,0.776618051404963,0.776618051404963,Adam,0.001,ReduceLROnPlateau,configs/eunet_base.yaml,
+UNetComposedLossSupervised,0.7474099650167393,0.7474099650167393,Adam,0.001,ReduceLROnPlateau,./configs/eunet_base20.yaml,
+UNetComposedLossSupervised,0.7779114653684783,0.7779114653684783,Adam,0.001,ReduceLROnPlateau,./configs/eunet_base.yaml,no_resnet_pretrained
+UNetComposedLossSupervised,0.7341580201516988,0.7219073292286764,Adam,0.0002,ReduceLROnPlateau,./configs/eunet_base20.yaml,
+UNetComposedLossSupervised,0.7925778698807662,0.8147004573564361,Adam,0.001,ReduceLROnPlateau,./configs/eunet_base.yaml,

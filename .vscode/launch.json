@@ -12,7 +12,7 @@
             "program": "${file}",
             // "program": "train.py",
             "env": { "CUDA_VISIBLE_DEVICES": "1" },
-            "args": [ "--config", "configs/semi_base.yaml" ],
+            "args": [ "--config", "configs/semi_eunet_base20.yaml" ],
             "console": "integratedTerminal",
             "justMyCode": false
         }
