@@ -161,8 +161,8 @@ class UNetComposedLossSupervised(nn.Module):
 
         self.up1 = conv1x1(64, ch_out)
         init_params(self)
-        # backbone.load_state_dict(torch.load(
-            # 'pretrained/resnet18-f37072fd.pth'))
+        backbone.load_state_dict(torch.load(
+            'pretrained/resnet18-f37072fd.pth'))
 
     def forward(self, x):
         x = self.conv1(x)

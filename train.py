@@ -35,8 +35,9 @@ if __name__ == "__main__":
     logger.info(cfg)
     ori_cfg = cfg.copy()
     # 加载数据集
-    trainset, testset, valset = factory.create_dataset(cfg["dataset"])
-    trainloader = DataLoader(trainset, cfg["batch_size"], True)
+    (trainset_u, trainset_l), testset, valset = factory.create_dataset(cfg["dataset"])
+    trainloader_u = DataLoader(trainset_u, cfg["batch_size"], True)
+    trainloader_l = DataLoader(trainset_l, cfg["batch_size"], True)
     testloader = DataLoader(testset, 8, False)
     valloader = DataLoader(valset, 8, False)
 
@@ -55,7 +56,6 @@ if __name__ == "__main__":
     # 训练
     meter_queue = MeterQueue(5)
     max_dice = 0
-    best_state = model.state_dict()
     global_step = 0
     for epoch in tqdm(range(cfg["epochs"])):
         if epoch >= cfg["valid_start_epoch"]:
@@ -63,7 +63,7 @@ if __name__ == "__main__":
             dice = meter["dice"]
             if dice > max_dice:
                 max_dice = dice
-                best_state = model.state_dict()
+                torch.save(model.state_dict(), join(cfg["save_path"], "best.pt"))
 
             if isinstance(scheduler, ReduceLROnPlateau):
                 scheduler.step(dice)
@@ -72,25 +72,24 @@ if __name__ == "__main__":
 
         if "semi" in cfg.keys():
             loss, ratio, global_step = semi.tool.train_epoch(
-                model, model_ema, trainloader, opt, global_step
+                model, model_ema, trainloader_u, opt, global_step
             )
-        else:
-            loss, _ = spgutils.train_epoch(model, trainloader, opt, criterion)
-        logger.info(f"{epoch}: {loss}")
+            logger.info(f"{epoch}: u {loss}")
+        loss, _ = spgutils.train_epoch(model, trainloader_l, opt, criterion)
+        logger.info(f"{epoch}: l {loss}")
         if not isinstance(scheduler, ReduceLROnPlateau):
             scheduler.step()
 
     logger.info(f"bestepoch:{meter_queue.get_best_epoch}")
     logger.info(f"bestval:{meter_queue.get_best_val}")
     torch.save(model.state_dict(), join(cfg["save_path"], "final.pt"))
-    torch.save(best_state, join(cfg["save_path"], "best.pt"))
 
     import evaluate
 
     final_meter, _ = evaluate.eval(model, testloader)
     logger.info(f"final_meter:{final_meter}")
 
-    model.load_state_dict(best_state)
+    model.load_state_dict(torch.load(join(cfg["save_path"], "best.pt")))
     best_meter, _ = evaluate.eval(model, testloader)
     logger.info(f"best_meter:{best_meter}")
 

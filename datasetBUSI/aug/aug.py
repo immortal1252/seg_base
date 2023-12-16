@@ -22,9 +22,23 @@ basic_aug = A.Compose(
 
 strong_aug = StrongImageAug(7, True)
 
+from torchvision.transforms.transforms import ToPILImage
+import numpy as np
+
+
+def debug(img, fp="new.png"):
+    if isinstance(img, np.ndarray):
+        img = totensor(image=img)["image"]
+    img = img.cpu()
+    ToPILImage()(img).save(fp)
+
 
 def mask2tensor(mask):
     assert mask.ndim == 2
     mask = torch.from_numpy(mask) / 255.0
     mask = mask.unsqueeze(0)
     return mask
+
+
+def cut_mix(tensor1, tensor2, mask):
+    return tensor1 * mask + (1 - mask) * tensor2

@@ -71,13 +71,13 @@ def train_epoch(
     for weak, mask, strong in dataloder:
         weak = move(weak, device)
         strong = move(strong, device)
-        # mask = move(mask, device)
+        mask = move(mask, device)
         logits_student = student_model(strong)
         with torch.no_grad():
             logits_teacher = teacher_model(weak).detach()
 
         loss, ratio = compute_unsupervised_loss_by_threshold(
-            logits_student, logits_teacher, 0.9
+            logits_student, logits_teacher, 0.95
         )
         # loss = F.binary_cross_entropy_with_logits(logits_student, mask)
         ratio = 0

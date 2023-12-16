@@ -1,0 +1,31 @@
+dataset:
+  name: weak_strong
+  root_dir: /data/litong/llm_aug-copy/Dataset_BUSI
+  train_file: labeled20.txt
+# nclass: 1
+
+# training
+epochs: 110
+valid_start_epoch: 0
+batch_size: 8
+save_path: ./20base_eunet
+semi:
+  pretrained: ./eunet20/best.pt
+
+opt:
+  name: adam
+  lr: 0.0002
+
+scheduler:
+  name: plat
+  verbose: True
+  factor: 0.85
+  mode: max
+
+criterion:
+  - name: bce
+    weight: 1
+
+model:
+  name: eunet
+  ch_out: 1

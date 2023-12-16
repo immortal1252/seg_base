@@ -82,7 +82,7 @@ class BaseBUSI(torch.utils.data.Dataset):
             if label in img_name:
                 break
         else:
-            raise Exception("wrong label")
+            raise Exception(f"wrong label:{img_name}")
 
         mask_name, ext = splitext(img_name)
         mask_name = f"{mask_name}_mask{ext}"
@@ -93,8 +93,6 @@ class BaseBUSI(torch.utils.data.Dataset):
 
     def __len__(self):
         return len(self.image_names)
-
-
 
 
 if __name__ == "__main__":

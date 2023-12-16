@@ -97,7 +97,9 @@ def create_dataset(cfg: Dict):
     cfg = cfg.copy()
     root_dir = cfg["root_dir"]
     with open(join(root_dir, cfg["train_file"])) as file:
-        train_filenames = file.read().split("\n")
+        train_filenames_l = file.read().split("\n")
+    with open(join(root_dir, f"un{cfg['train_file']}")) as file:
+        train_filenames_u = file.read().split("\n")
     with open(join(root_dir, "test.txt")) as file:
         test_filenames = file.read().split("\n")
     with open(join(root_dir, "val.txt")) as file:
@@ -105,7 +107,9 @@ def create_dataset(cfg: Dict):
 
     name = cfg["name"]
 
-    trainset = name2dataset[name](root_dir, train_filenames, mode="train")
+    # trainset = name2dataset[name](root_dir, train_filenames, mode="train")
+    trainset_l = MaskBUSI(root_dir, train_filenames_l, mode="train")
+    trainset_u = WeakStrongBUSI(root_dir, train_filenames_u, mode="train")
     valset = MaskBUSI(root_dir, val_filenames, mode="test")
     testset = MaskBUSI(root_dir, test_filenames, mode="test")
-    return trainset, valset, testset
+    return (trainset_u, trainset_l), valset, testset
