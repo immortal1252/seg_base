@@ -4,10 +4,11 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 from torch.optim import Optimizer
 import time
-import aug
+from .aug.aug import random_mask, strong_aug
 import torch.nn.functional as F
 from .spgutils.move import move
 import time
+from datasetBUSI.mask_busi import MaskBUSI
 
 
 def get_dataloader(dataset: Dataset):
@@ -57,7 +58,8 @@ def debug(tensor, name="new.png"):
 def train_epoch(
     student_model: nn.Module,
     teacher_model: nn.Module,
-    dataloder: DataLoader,
+    dataloder_u: DataLoader,
+    dataset_l: MaskBUSI,
     opt: Optimizer,
     global_step,
     base_beta=0.9,
@@ -68,13 +70,24 @@ def train_epoch(
     epoch_loss = 0
     epoch_ratio = 0
     # elapsed = 0
-    for weak, mask, strong in dataloder:
+    for weak, mask in dataloder_u:
         weak = move(weak, device)
-        strong = move(strong, device)
         mask = move(mask, device)
+
+        image_l, mask_l = move(dataset_l.get_random(weak.shape[0]), device)  # type: ignore
+
+        cutmix_mask = random_mask(*weak[:, 0].shape).to(device)  # type: ignore
+
+        weak = image_l * cutmix_mask + weak * (1 - cutmix_mask)
+        mask = mask_l * cutmix_mask + mask * (1 - cutmix_mask)
+
+        strong = strong_aug(weak)
+
         logits_student = student_model(strong)
         with torch.no_grad():
             logits_teacher = teacher_model(weak).detach()
+
+        logits_teacher = mask_l * cutmix_mask + logits_teacher * (1 - cutmix_mask)
 
         loss, ratio = compute_unsupervised_loss_by_threshold(
             logits_student, logits_teacher, 0.95
@@ -96,4 +109,4 @@ def train_epoch(
         global_step += 1
 
     # print(elapsed)
-    return epoch_loss, epoch_ratio / len(dataloder), global_step
+    return epoch_loss, epoch_ratio / len(dataloder_u), global_step

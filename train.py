@@ -72,7 +72,7 @@ if __name__ == "__main__":
 
         if "semi" in cfg.keys():
             loss, ratio, global_step = semi.tool.train_epoch(
-                model, model_ema, trainloader_u, opt, global_step
+                model, model_ema, trainloader_u, trainset_l, opt, global_step
             )
             logger.info(f"{epoch}: u {loss}")
         loss, _ = spgutils.train_epoch(model, trainloader_l, opt, criterion)

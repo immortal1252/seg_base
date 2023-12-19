@@ -335,18 +335,37 @@ class strong_img_aug:
             img = op(img, scales)
         return img
 
+
 # cv2的接口
+from torchvision.transforms.transforms import ToPILImage, ToTensor
+
+
 class StrongImageAug:
     def __init__(self, num_augs, flag_using_random_num=False):
         self.strong_aug = strong_img_aug(num_augs, flag_using_random_num)
+        self.topil = ToPILImage()
+        self.totensor = ToPILImage()
+        self.totensor = ToTensor()
 
-    def __call__(self, cv2_img):
-        # cv2_img = cv2.cvtColor(cv2_img,cv2.COLOR_BGR2RGB)
-        pil_img = Image.fromarray(cv2_img)
-        pil_img = self.strong_aug(pil_img)
-        cv2_img = np.array(pil_img)
-        # cv2_img = cv2.cvtColor(cv2_img,cv2.COLOR_BGR2RGB)
-        return cv2_img
+    def __call__(self, img):
+        if isinstance(img, np.ndarray):
+            # cv2_img = cv2.cvtColor(cv2_img,cv2.COLOR_BGR2RGB)
+            pil_img = Image.fromarray(img)
+            pil_img = self.strong_aug(pil_img)
+            img = np.array(pil_img)
+            # cv2_img = cv2.cvtColor(cv2_img,cv2.COLOR_BGR2RGB)
+            return img
+        if isinstance(img, torch.Tensor):
+            device = img.device
+            ret = []
+            for img_t in img:
+                pil = self.topil(img_t.cpu())
+                pil = self.strong_aug(pil)
+                tensor = self.totensor(pil).to(device)
+                ret.append(tensor)
+            ret = torch.cat(ret)
+            return ret
+
 
 if __name__ == "__main__":
-   aug = strong_img_aug(5)
+    aug = strong_img_aug(5)
