@@ -9,10 +9,10 @@
             "name": "Python: 当前文件",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
-            // "program": "train.py",
+            // "program": "${file}",
+            "program": "train.py",
             "env": { "CUDA_VISIBLE_DEVICES": "1" },
-            "args": [ "--config", "configs/semi_eunet_base20.yaml" ],
+            "args": [ "--config", "configs/semi_eunet_base20_cutmix.yaml" ],
             "console": "integratedTerminal",
             "justMyCode": false
         }

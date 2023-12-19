@@ -21,3 +21,5 @@ UNetComposedLossSupervised,0.7474099650167393,0.7474099650167393,Adam,0.001,Redu
 UNetComposedLossSupervised,0.7779114653684783,0.7779114653684783,Adam,0.001,ReduceLROnPlateau,./configs/eunet_base.yaml,no_resnet_pretrained
 UNetComposedLossSupervised,0.7341580201516988,0.7219073292286764,Adam,0.0002,ReduceLROnPlateau,./configs/eunet_base20.yaml,
 UNetComposedLossSupervised,0.7925778698807662,0.8147004573564361,Adam,0.001,ReduceLROnPlateau,./configs/eunet_base.yaml,
+UNetComposedLossSupervised,0.7298916477329186,0.7291678607023458,Adam,0.0002,ReduceLROnPlateau,configs/semi_eunet_base20.yaml,
+UNetComposedLossSupervised,0.7135797991697226,0.7370327592269363,Adam,0.0002,ReduceLROnPlateau,configs/semi_eunet_base20_cutmix.yaml,

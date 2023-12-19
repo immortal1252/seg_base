@@ -11,9 +11,9 @@ class WeakStrongBUSI(BaseBUSI):
         augmented = super().__getitem__(index)
         weak, mask = augmented["image"], augmented["mask"]
         mask = aug.mask2tensor(mask)
-        strong = aug.strong_aug(weak)
+        # strong = aug.strong_aug(weak)
 
         weak = aug.norm_totensor(image=weak)["image"]
-        strong = aug.norm_totensor(image=strong)["image"]
+        # strong = aug.norm_totensor(image=strong)["image"]
         # mask 不看就好了
-        return weak, mask, strong
+        return weak, mask
