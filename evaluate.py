@@ -4,9 +4,10 @@ from torch.utils.data import DataLoader
 from torch import nn
 import yaml
 import datasetBUSI.base_busi as base_busi
-from net.eunet import UNetComposedLossSupervised
+from net.eunet import EUnet
 from net.unet import UNet
 from spgutils.segmetric import compute_dice, Meter
+
 
 def debug(tensor, name="new.png"):
     import cv2
@@ -15,6 +16,7 @@ def debug(tensor, name="new.png"):
 
     pil = ToPILImage()(tensor)
     pil.save(name)
+
 
 def eval(model, testloader, criterion=None):
     device = next(model.parameters())
@@ -43,7 +45,7 @@ def eval(model, testloader, criterion=None):
 if __name__ == "__main__":
     from net.unet import UNet
 
-    with open("./configs/semi_base.yaml") as file:
+    with open("configs-bak/semi_base.yaml") as file:
         cfg = yaml.load(file, yaml.FullLoader)
 
     model = factory.create_model(cfg["model"])

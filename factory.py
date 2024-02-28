@@ -1,13 +1,13 @@
 from typing import Dict, List
 from net.unet import UNet
-from net.eunet import UNetComposedLossSupervised
+from net.eunet import EUnet
 from torch import nn
 from spgutils.diceloss import BinaryDiceLoss
 import focalloss
 import torch
 from os.path import join
 
-name2model = {"unet": UNet, "eunet": UNetComposedLossSupervised}
+name2model = {"unet": UNet, "eunet": EUnet}
 
 name2act = {"relu": nn.ReLU, "leakyrelu": nn.LeakyReLU}
 
