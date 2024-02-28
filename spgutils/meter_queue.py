@@ -1,4 +1,4 @@
-class MeterQueue():
+class MeterQueue:
     """
     维护capacity个epoch内最好的均值
     """
@@ -26,18 +26,16 @@ class MeterQueue():
         else:
             pop = self._queue.pop(0)
             self._queue.append(ele)
-            self._curr_val += ele-pop
+            self._curr_val += ele - pop
             if self._mode == "max" and self._curr_val > self._best_val:
                 self._best_val = self._curr_val
                 self._best_epoch = epoch
             elif self._mode == "min" and self._curr_val < self._best_val:
                 self._best_val = self._curr_val
                 self._best_epoch = epoch
-    
-    @property
-    def get_best_val(self):
-        return self._best_val/len(self._queue)
 
-    @property
+    def get_best_val(self):
+        return self._best_val / len(self._queue)
+
     def get_best_epoch(self):
-        return self._best_epoch-self._capacity+1, self._best_epoch
+        return self._best_epoch - self._capacity + 1, self._best_epoch

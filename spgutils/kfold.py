@@ -2,7 +2,8 @@ from sklearn.model_selection import KFold
 from torch.utils.data import DataLoader
 from typing import List
 
-def kfold_dataloader(k, dataset_construct,X,args_train:List,args_test:List,batch_train,batch_test):
+
+def kfold_dataloader(k, dataset_construct, X, args_train: List, args_test: List, batch_train, batch_test):
     """返回k个trainloader,testloader
 
     Args:
@@ -17,8 +18,8 @@ def kfold_dataloader(k, dataset_construct,X,args_train:List,args_test:List,batch
 
     kf = KFold(n_splits=k)
     for train_index, test_index in kf.split(X):
-        trainset = dataset_construct(X[train_index],*args_train)
-        testset = dataset_construct(X[test_index],*args_test)
+        trainset = dataset_construct(X[train_index], *args_train)
+        testset = dataset_construct(X[test_index], *args_test)
 
         trainloader = DataLoader(trainset, batch_size=batch_train, shuffle=True)
         testloader = DataLoader(testset, batch_size=batch_test, shuffle=False)

@@ -1,16 +1,26 @@
 import logging
 import datetime
+import os
 
-logger = logging.getLogger("mainlogger")
-logger.setLevel(logging.INFO)
 
-current_time = datetime.datetime.now().strftime("%y-%m-%d_%H-%M-%S-%f")
-log_filename = f"log/{current_time}.log"
+def new_logger():
+    logger = logging.getLogger("mainlogger")
+    logger.setLevel(logging.INFO)
 
-file_handler = logging.FileHandler(log_filename, encoding="utf8")
-file_handler.setLevel(logging.INFO)
+    current_time = datetime.datetime.now().strftime("%y-%m-%d_%H-%M")
+    log_filename = f"{current_time}.log"
 
-formatter = logging.Formatter("%(asctime)s -%(levelname)s - %(message)s", "%H:%M:%S")
-file_handler.setFormatter(formatter)
+    file_handler = logging.FileHandler(log_filename, mode="w")
+    file_handler.setLevel(logging.INFO)
 
-logger.addHandler(file_handler)
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    file_handler.setFormatter(formatter)
+
+    logger.addHandler(file_handler)
+    return logger
+
+
+logger = new_logger()
+logger.info(os.getpid())
