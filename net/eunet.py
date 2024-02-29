@@ -50,7 +50,7 @@ class up_conv(nn.Module):
         super(up_conv, self).__init__()
         self.up = nn.Sequential(
             # nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True),
-            Upsample(scale_factor=2, mode='bilinear', align_corners=True),
+            nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True),
             conv3x3(ch_in, ch_out),
             nn.BatchNorm2d(ch_out),
             nn.ReLU(inplace=True)
@@ -101,9 +101,9 @@ def resnet18():
     return net
 
 
-class UNetComposedLossSupervised(nn.Module):
-    def __init__(self, ch_out,sv=False):
-        super(UNetComposedLossSupervised, self).__init__()
+class EUnet(nn.Module):
+    def __init__(self, ch_out, sv=False):
+        super().__init__()
         self.sv = sv
         backbone = resnet18()
         self.conv1 = nn.Sequential(
@@ -146,7 +146,6 @@ class UNetComposedLossSupervised(nn.Module):
                 nn.ReLU(inplace=True),
                 conv3x3(4, 1)
             )
-        self.fuse = conv3x3(4, 1)
 
         self.se_block = SEBlock(ch_in=512, r=32)
 

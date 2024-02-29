@@ -11,7 +11,7 @@ import albumentations as A
 import cv2
 import torch.utils.data
 import einops
-from .aug import aug
+import aug.aug_albu
 
 
 def get_mean_std(tensor: torch.Tensor):
@@ -48,7 +48,7 @@ def save_img_from_tensor(tensor: torch.Tensor, filename):
     img.save(filename)
 
 
-def get_basic_aug(img_fp, mask_fp, mode, get_mask) -> Dict:
+def get_with_basic_aug(img_fp, mask_fp, mode, get_mask) -> Dict:
     image = cv2.imread(img_fp)
     mask = None
     if get_mask:
@@ -56,22 +56,23 @@ def get_basic_aug(img_fp, mask_fp, mode, get_mask) -> Dict:
 
     # 监督训练
     if mode == "train" and mask is not None:
-        augmented = aug.basic_aug(image=image, mask=mask)
+        augmented = aug.aug_albu.basic_aug(image=image, mask=mask)
     # 监督测试
     elif mask is not None:
-        augmented = aug.resize(image=image, mask=mask)
+        augmented = aug.aug_albu.resize(image=image, mask=mask)
     # 无监督训练
     else:
-        augmented = aug.basic_aug(image=image)
+        augmented = aug.aug_albu.basic_aug(image=image)
 
     return augmented
 
 
 # 基类,只进行弱数据增强,返回cv2图像
 class BaseBUSI(torch.utils.data.Dataset):
-    def __init__(self, root_dir, image_names, mode, get_mask):
+    def __init__(self, root_dir, image_names_path, mode, get_mask):
         super().__init__()
-        self.image_names = image_names
+        with open(image_names_path, mode='r') as f:
+            self.image_names = f.read().splitlines()
         self.mode = mode
         self.root_dir = root_dir
         self.get_mask = get_mask
@@ -89,7 +90,7 @@ class BaseBUSI(torch.utils.data.Dataset):
         img_fp = join(self.root_dir, label, "image", img_name)
         mask_fp = join(self.root_dir, label, "mask", mask_name)
 
-        return get_basic_aug(img_fp, mask_fp, self.mode, self.get_mask)
+        return get_with_basic_aug(img_fp, mask_fp, self.mode, self.get_mask)
 
     def __len__(self):
         return len(self.image_names)
