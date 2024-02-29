@@ -4,12 +4,13 @@ import torch.nn.functional as F
 
 
 class BinaryFocalLoss(nn.Module):
-    def __init__(self, alpha=None, gamma=2):
+    def __init__(self, alpha=None, gamma=2, reduction="mean"):
         super().__init__()
         if alpha is None:
             alpha = [1, 1]
         self.alpha = alpha
         self.gamma = gamma
+        self.reduction = reduction
 
     def forward(self, logits, target):
         # 计算交叉熵损失
@@ -22,7 +23,12 @@ class BinaryFocalLoss(nn.Module):
             focal_loss[index] = focal_loss[index] * t
 
         # 返回平均损失
-        return focal_loss.mean()
+        if self.reduction == "mean":
+            return focal_loss.mean()
+        elif self.reduction == "sum":
+            return focal_loss.sum()
+        else:
+            return focal_loss
 
 
 class FocalLoss(nn.Module):
