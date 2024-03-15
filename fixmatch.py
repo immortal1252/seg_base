@@ -9,6 +9,7 @@ import spgutils.utils
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import spgutils.meter_queue
+from torchvision.transforms.transforms import ToPILImage
 
 
 class FixMatch(spgutils.pipeline.Pipeline):
@@ -40,7 +41,7 @@ class FixMatch(spgutils.pipeline.Pipeline):
         self.logger.info(meter_queue.get_best_epoch())
         self.logger.info(meter_queue.get_best_val())
 
-        df = pd.result.csv("./result.csv")
+        df = pd.read_csv("./result.csv")
         df.loc[len(df)] = {"desc": self.config["desc"], "dice": dice}
         df.to_csv("./result.csv", index=False)
 
@@ -77,6 +78,19 @@ class FixMatch(spgutils.pipeline.Pipeline):
 
         return epoch_loss
 
+    def save_from_tensor(self):
+        id = 0
+
+        def func(tensor):
+            nonlocal id
+            tensor = tensor.cpu().detach().numpy()
+            for i in range(tensor.shape[0]):
+                pil = ToPILImage()(tensor[i])
+                pil.save(f"pred/{id}.png")
+                id += 1
+
+        return func
+
     def evaluate(self, test_loader: DataLoader):
         self.model.eval()
         dice_total = 0
@@ -89,11 +103,12 @@ class FixMatch(spgutils.pipeline.Pipeline):
                 y_pred = self.model(x)
 
             y_pred = torch.where(y_pred > 0, 1, 0)
+
             dice = (2 * torch.sum(y * y_pred) + 1e-9) / (torch.sum(y_pred + y) + 1e-9)
             acc = torch.sum(y_pred == y)
             cnt += x.shape[0]
             dice_total += dice.item()
-            acc_total += acc.item()
+            acc_total += acc.item() / (y.shape[-1] * y.shape[-2])
 
         dice_avg = dice_total / cnt
         acc_avg = acc_total / cnt
