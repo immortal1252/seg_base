@@ -56,7 +56,8 @@ class FixMatch(spgutils.pipeline.Pipeline):
 
             inputs = torch.cat([x, weak, strong1], dim=0)
             logits = self.model(inputs)
-            y_logits, weak_logits, strong1_logits = torch.chunk(logits, 3, dim=0)
+            y_logits, weak_logits, strong1_logits = torch.split(logits, [x.shape[0], weak.shape[0], strong1.shape[0]],
+                                                                dim=0)
             # supervised
             loss_x = self.criterion(y_logits, y).mean()
 
