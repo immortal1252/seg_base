@@ -83,7 +83,7 @@ class FixMatch(spgutils.pipeline.Pipeline):
 
         def func(tensor):
             nonlocal id
-            tensor = tensor.cpu().detach().numpy()
+            tensor = tensor.cpu().detach()
             for i in range(tensor.shape[0]):
                 pil = ToPILImage()(tensor[i])
                 pil.save(f"pred/{id}.png")
