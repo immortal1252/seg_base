@@ -8,15 +8,15 @@ model:
 trainset:
   name: datasetBUSI.mask_busi.MaskBUSI
   args:
-    root_dir: d:/data/Dataset_BUSI
-    image_names_path: d:/data/Dataset_BUSI/labeled20.txt
+    root_dir: /Dataset_BUSI
+    image_names_path: /Dataset_BUSI/labeled20.txt
     mode: train
 
 trainset_u:
   name: datasetBUSI.w_s.WeakStrongBUSI
   args:
-    root_dir: d:/data/Dataset_BUSI
-    image_names_path: d:/data/Dataset_BUSI/unlabeled20.txt
+    root_dir: /Dataset_BUSI
+    image_names_path: /Dataset_BUSI/unlabeled20.txt
     mode: train
 
 
@@ -24,8 +24,8 @@ trainset_u:
 testset:
   name: datasetBUSI.mask_busi.MaskBUSI
   args:
-    root_dir: d:/data/Dataset_BUSI
-    image_names_path: d:/data/Dataset_BUSI/test.txt
+    root_dir: /Dataset_BUSI
+    image_names_path: /Dataset_BUSI/test.txt
     mode: test
 
 criterion:
