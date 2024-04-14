@@ -2,18 +2,21 @@ import os
 
 import torch
 import yaml
+from datasetBUSI.base_busi import save_img_from_tensor
 
 import spgutils.log
 from spgutils import utils
 from torch.optim.optimizer import Optimizer
 from torch.optim.lr_scheduler import _LRScheduler
-
+from torchvision.transforms import transforms
 from torch.utils.data import Dataset, DataLoader
 from torch import nn
 from typing import Dict
+from PIL import Image
+import abc
 
 
-class Pipeline:
+class Pipeline(abc.ABC):
     def __init__(self, config_path: str):
         self.path = config_path
         self.config: Dict = self.load(config_path)
@@ -52,11 +55,46 @@ class Pipeline:
         self.logger.info(self.config)
         self.logger.info(utils.get_pararms_num(self.model))
 
+    @abc.abstractmethod
     def train(self):
         raise NotImplementedError("not implement")
 
     def evaluate(self, test_loader: DataLoader):
-        raise NotImplementedError("not implement")
+        self.model.eval()
+        tp = 0
+        pixel_cnt = 0
+        intersection = 0
+        union = 0
+        for batch_id, (x, y) in enumerate(test_loader):
+            x = x.to(self.device)
+            y = y.to(self.device)
+            with torch.no_grad():
+                y_pred = self.model(x)
+
+            y_pred = torch.where(y_pred > 0, 1, 0)
+            self.save_y_ypred(y, y_pred, batch_id)
+
+            intersection += torch.sum(y * y_pred).item()
+            union += torch.sum(y_pred + y).item()
+            tp += torch.sum(y_pred == y).item()
+            pixel_cnt += y.numel()
+
+        dice_avg = (2 * intersection + 1e-9) / (union + 1e-9)
+        acc_avg = tp / pixel_cnt
+        self.logger.info(f"Dice score: {dice_avg:.4}")
+        self.logger.info(f"Accuracy: {acc_avg:.4}")
+
+        return dice_avg
+
+    def save_y_ypred(self, y: torch.Tensor, ypred: torch.Tensor, id: int):
+        y = y.cpu().float()
+        ypred = ypred.cpu().float()
+        for i in range(y.shape[0]):
+            topil = transforms.ToPILImage()
+            png_y: Image.Image = topil(y[i])
+            png_ypred = topil(ypred[i])
+            png_y.save(f"temp/{id}_{i}_y.png")
+            png_ypred.save(f"temp/{id}_{i}_ypred.png")
 
     def train_epoch(self, train_loader: DataLoader):
         self.model.train()
@@ -76,3 +114,6 @@ class Pipeline:
     def load(config_path: str):
         with open(config_path, "r") as f:
             return yaml.load(f, Loader=yaml.FullLoader)
+
+if __name__ == "__main__":
+   a = Pipeline("a")

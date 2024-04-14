@@ -17,19 +17,23 @@ def visual(img):
 
 
 class WeakStrongBUSI(BaseBUSI):
-    def __init__(self, root_dir, image_names_path, mode):
+    def __init__(self, root_dir, image_names_path, mode, s_num=1):
         # super().__init__(root_dir, image_names_path, mode, get_mask=False)
         super().__init__(root_dir, image_names_path, mode, get_mask=True)
+        self.s_num = s_num
 
     def __getitem__(self, index):
         augmented = super().__getitem__(index)
         weak, mask = augmented["image"], augmented["mask"]
         mask = aug.aug_albu.mask2tensor(mask)
 
-        strong1 = aug.aug_albu.strong_aug(image=weak)["image"]
+        strong_list = []
+        for _ in range(self.s_num):
+            strong = aug.aug_albu.strong_aug(image=weak)["image"]
+            strong = aug.aug_albu.norm_totensor(image=strong)["image"]
+            strong_list.append(strong)
 
         weak = aug.aug_albu.norm_totensor(image=weak)["image"]
-        strong1 = aug.aug_albu.norm_totensor(image=strong1)["image"]
         # visual(strong2)
         # mask 不看就好了
-        return weak, mask, strong1
+        return weak, mask, *strong_list

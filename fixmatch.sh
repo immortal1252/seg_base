@@ -1,0 +1,1 @@
+nohup python abstract_match.py --impl fixmatch.FixMatch --path "./config/eunet_fixmatch.yaml">fixmatch.out 2>&1 &

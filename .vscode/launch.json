@@ -9,10 +9,12 @@
             "name": "Python: 当前文件",
             "type": "python",
             "request": "launch",
-            // "program": "${file}",
-            "program": "train.py",
-            "env": { "CUDA_VISIBLE_DEVICES": "1" },
-            "args": [ "--config", "configs/semi_eunet_base20_cutmix.yaml" ],
+            "program": "${file}",
+            // "program": "fixmatch.py",
+            // "program": "supervised.py",
+            "env": { "CUDA_VISIBLE_DEVICES": "0" },
+            "args": [ "--impl","fixmatch_ema.FixMatchEMA","--path", "config/eunet_fixmatch.yaml" ],
+            // "args": [ "--path", "config/eunet.yaml" ],
             "console": "integratedTerminal",
             "justMyCode": false
         }

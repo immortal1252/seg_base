@@ -1,5 +1,6 @@
 batch_size: 8
-epochs: 50
+epochs: 200
+meta: &root_dir /home/4T/zcr/dataset/Dataset_BUSI
 model:
   name: net.eunet.EUnet
   args:
@@ -8,15 +9,15 @@ model:
 trainset:
   name: datasetBUSI.mask_busi.MaskBUSI
   args:
-    root_dir: /Dataset_BUSI
-    image_names_path: /Dataset_BUSI/labeled20.txt
+    root_dir: *root_dir 
+    image_names_path: labeled20.txt
     mode: train
 
 trainset_u:
   name: datasetBUSI.w_s.WeakStrongBUSI
   args:
-    root_dir: /Dataset_BUSI
-    image_names_path: /Dataset_BUSI/unlabeled20.txt
+    root_dir: *root_dir
+    image_names_path: unlabeled20.txt
     mode: train
 
 
@@ -24,8 +25,8 @@ trainset_u:
 testset:
   name: datasetBUSI.mask_busi.MaskBUSI
   args:
-    root_dir: /Dataset_BUSI
-    image_names_path: /Dataset_BUSI/test.txt
+    root_dir: *root_dir
+    image_names_path: test.txt
     mode: test
 
 criterion:
@@ -42,4 +43,4 @@ scheduler:
   name: torch.optim.lr_scheduler.StepLR
   args:
     step_size: 1
-    gamma: 0.95
+    gamma: 0.999

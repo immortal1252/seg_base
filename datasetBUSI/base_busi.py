@@ -71,7 +71,8 @@ def get_with_basic_aug(img_fp, mask_fp, mode, get_mask) -> Dict:
 class BaseBUSI(torch.utils.data.Dataset):
     def __init__(self, root_dir, image_names_path, mode, get_mask):
         super().__init__()
-        with open(image_names_path, mode='r') as f:
+        image_names_path = join(root_dir, image_names_path)
+        with open(image_names_path, mode="r") as f:
             self.image_names = f.read().splitlines()
         self.mode = mode
         self.root_dir = root_dir

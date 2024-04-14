@@ -1,5 +1,6 @@
 batch_size: 8
-epochs: 50
+epochs: 100
+root_dir: &root_dir /home/4T/zcr/dataset/Dataset_BUSI
 model:
   name: net.eunet.EUnet
   args:
@@ -8,19 +9,22 @@ model:
 trainset:
   name: datasetBUSI.mask_busi.MaskBUSI
   args:
-    root_dir: d:/data/Dataset_BUSI
-    image_names_path: d:/data/Dataset_BUSI/labeled20.txt
+    root_dir: *root_dir
+    image_names_path: labeled_all.txt
     mode: train
 
 testset:
   name: datasetBUSI.mask_busi.MaskBUSI
   args:
-    root_dir: d:/data/Dataset_BUSI
-    image_names_path: d:/data/Dataset_BUSI/unlabeled20.txt
+    root_dir: *root_dir
+    image_names_path: test.txt
     mode: test
 
 criterion:
+  # name: spgutils.focalloss.BinaryFocalLoss
   name: spgutils.focalloss.BinaryFocalLoss
+  args:
+    gamma: 1
 
 optimizer:
   name: torch.optim.Adam
@@ -31,4 +35,4 @@ scheduler:
   name: torch.optim.lr_scheduler.StepLR
   args:
     step_size: 1
-    gamma: 0.95
+    gamma: 0.99

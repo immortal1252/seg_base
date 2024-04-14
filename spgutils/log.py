@@ -23,4 +23,3 @@ def new_logger():
 
 
 logger = new_logger()
-logger.info(os.getpid())

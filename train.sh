@@ -1,1 +1,0 @@
-nohup python fixmatch.py --path "./config/eunet_fixmatch.yaml">eunet_fixmatch.out 2>&1 &

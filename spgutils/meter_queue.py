@@ -27,10 +27,9 @@ class MeterQueue:
             pop = self._queue.pop(0)
             self._queue.append(ele)
             self._curr_val += ele - pop
-            if self._mode == "max" and self._curr_val > self._best_val:
-                self._best_val = self._curr_val
-                self._best_epoch = epoch
-            elif self._mode == "min" and self._curr_val < self._best_val:
+            if (self._mode == "max" and self._curr_val > self._best_val) or (
+                self._mode == "min" and self._curr_val < self._best_val
+            ):
                 self._best_val = self._curr_val
                 self._best_epoch = epoch
 
