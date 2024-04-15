@@ -51,6 +51,7 @@ class Pipeline(abc.ABC):
         utils.seed_everything(42)
         self.logger = spgutils.log.logger
         self.logger.info(os.getpid())
+        self.logger.info(type(self))
         self.logger.info(self.path)
         self.logger.info(self.config)
         self.logger.info(utils.get_pararms_num(self.model))
