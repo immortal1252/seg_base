@@ -1,0 +1,1 @@
+nohup python -u universeg_pipeline.py --path config/universeg.yaml > universeg.out &

@@ -1,6 +1,6 @@
 batch_size: 8
 epochs: 100
-root_dir: &root_dir /home/4T/zcr/dataset/Dataset_BUSI
+root_dir: &root_dir /Dataset_BUSI
 model:
   name: net.eunet.EUnet
   args:
