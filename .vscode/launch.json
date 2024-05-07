@@ -13,8 +13,8 @@
             // "program": "fixmatch.py",
             // "program": "supervised.py",
             "env": { "CUDA_VISIBLE_DEVICES": "0" },
-            "args": [ "--impl","fixmatch_ema.FixMatchEMA","--path", "config/eunet_fixmatch.yaml" ],
-            // "args": [ "--path", "config/eunet.yaml" ],
+            // "args": [ "--impl","fixmatch_ema.FixMatchEMA","--path", "config/eunet_fixmatch.yaml" ],
+            "args": [ "--path", "config/universeg.yaml" ],
             "console": "integratedTerminal",
             "justMyCode": false
         }
