@@ -1,9 +1,12 @@
 import os
 
+import pandas as pd
 import torch
 import yaml
-from datasetBUSI.base_busi import save_img_from_tensor
+from tqdm import tqdm
 
+from datasetBUSI.base_busi import save_img_from_tensor
+import spgutils.meter_queue
 import spgutils.log
 from spgutils import utils
 from torch.optim.optimizer import Optimizer
@@ -13,10 +16,9 @@ from torch.utils.data import Dataset, DataLoader
 from torch import nn
 from typing import Dict
 from PIL import Image
-import abc
 
 
-class Pipeline(abc.ABC):
+class Pipeline:
     def __init__(self, config_path: str):
         self.path = config_path
         self.config: Dict = self.load(config_path)
@@ -56,9 +58,35 @@ class Pipeline(abc.ABC):
         self.logger.info(self.config)
         self.logger.info(utils.get_pararms_num(self.model))
 
-    @abc.abstractmethod
+    def prepare_data(self):
+        batch_size = self.config["batch_size"]
+        train_loader = DataLoader(self.trainset, batch_size=batch_size, shuffle=True)
+        test_loader = DataLoader(self.testset, batch_size=batch_size, shuffle=False)
+        return train_loader, test_loader
+
     def train(self):
-        raise NotImplementedError("not implement")
+        train_loader, test_loader = self.prepare_data()
+        epochs = self.config["epochs"]
+        dice = -1
+
+        meter_queue = spgutils.meter_queue.MeterQueue(5)
+        for epoch in tqdm(range(epochs)):
+            loss = self.train_epoch(train_loader)
+            self.scheduler.step()
+            self.logger.info(f"Epoch {epoch}  {loss}")
+            if epoch == epochs - 1 or epoch % 10 == 1:
+                dice = self.evaluate(test_loader)
+                meter_queue.append(dice, epoch)
+
+        self.post(meter_queue, dice)
+
+    def post(self, meter_queue, dice):
+        self.logger.info(meter_queue.get_best_epoch())
+        self.logger.info(meter_queue.get_best_val())
+
+        df = pd.read_csv("./result.csv")
+        df.loc[len(df)] = {"desc": self.path[: self.path.rfind(".")], "dice": dice}
+        df.to_csv("./result.csv", index=False)
 
     def evaluate(self, test_loader: DataLoader):
         self.model.eval()
@@ -97,7 +125,7 @@ class Pipeline(abc.ABC):
             png_y.save(f"temp/{id}_{i}_y.png")
             png_ypred.save(f"temp/{id}_{i}_ypred.png")
 
-    def train_epoch(self, train_loader: DataLoader):
+    def train_epoch(self, train_loader):
         self.model.train()
         epoch_loss = 0
         for inputs, targets in train_loader:
@@ -116,5 +144,6 @@ class Pipeline(abc.ABC):
         with open(config_path, "r") as f:
             return yaml.load(f, Loader=yaml.FullLoader)
 
+
 if __name__ == "__main__":
-   a = Pipeline("a")
+    a = Pipeline("a")
