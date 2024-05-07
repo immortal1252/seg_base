@@ -29,7 +29,7 @@ basic_aug = A.Compose(
     ]
 )
 #
-P = 0.8
+P = 0.5
 strong_aug = A.Compose(
     [
         A.Equalize(p=P),

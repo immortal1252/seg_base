@@ -8,3 +8,8 @@ config/eunet_fixmatch.yaml,0.6135976643229708
 ./config/eunet_fixmatch.yaml,0.6538430618734355
 ./config/eunet_fixmatch.yaml,0.6286843235049372
 config/eunet,0.7325222955894404
+config/eunet,0.7577614922828425
+./config/eunet_fixmatch.yaml,0.6568933759996598
+./config/eunet_fixmatch.yaml,0.6626617640613642
+config/eunet,0.753823843247064
+config/eunet_batch*2,0.7647321660773869
