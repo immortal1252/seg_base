@@ -26,3 +26,7 @@ universeg_config/universeg_lr-,0.452885943087264
 universeg_config/universeg_lr+,0.5362305705808221
 universeg_config/universeg_big,0.5840890945105971
 universeg_config/universeg_big,0.6329717892356616
+universeg_config/universeg_base2_big,0.5964866382644743
+universeg_config/universeg_base2_big_batch,0.6240902426696652
+universeg_config/universeg_base2_big_batch_lr-,0.560078226947197
+universeg_config/universeg_base2_big_batch_lr+,0.49846216317979286

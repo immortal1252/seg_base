@@ -1,0 +1,40 @@
+desc: "输入单通道，大小384"
+batch_size: 4
+epochs: 100
+k: 2
+root_dir: &root_dir /Dataset_BUSI
+model:
+  name: universeg.universeg.UniverSeg
+  args:
+    encoder_blocks: [64, 128, 256, 512, 512]
+    in_ch: [1, 2]
+
+trainset:
+  name: datasetBUSI.mask_busi_single.MaskBUSISingle
+  args:
+    root_dir: *root_dir
+    image_names_path: labeled20.txt
+    mode: train
+
+testset:
+  name: datasetBUSI.mask_busi_single.MaskBUSISingle
+  args:
+    root_dir: *root_dir
+    image_names_path: test.txt
+    mode: test
+
+criterion:
+  name: spgutils.focalloss.BinaryFocalLoss
+  args:
+    gamma: 1
+
+optimizer:
+  name: torch.optim.Adam
+  args:
+    lr: 0.0002
+
+scheduler:
+  name: torch.optim.lr_scheduler.StepLR
+  args:
+    step_size: 1
+    gamma: 0.99
