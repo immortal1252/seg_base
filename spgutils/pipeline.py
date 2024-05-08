@@ -1,5 +1,5 @@
 import os
-
+import logging
 import pandas as pd
 import torch
 import yaml
@@ -86,7 +86,16 @@ class Pipeline:
         self.logger.info(meter_queue.get_best_val())
 
         df = pd.read_csv("./result.csv")
-        df.loc[len(df)] = {"desc": self.path[: self.path.rfind(".")], "dice": dice}
+        log_name = ""
+        for handler in self.logger.handlers:
+            if isinstance(handler, logging.FileHandler):
+                log_name = handler.baseFilename
+        
+        df.loc[len(df)] = {
+            "desc": self.path[: self.path.rfind(".")],
+            "dice": dice,
+            "log": log_name,
+        }
         df.to_csv("./result.csv", index=False)
 
     def evaluate(self, test_loader: DataLoader):
