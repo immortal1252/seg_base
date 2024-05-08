@@ -5,7 +5,7 @@ root_dir: &root_dir /home/4T/zcr/dataset/Dataset_BUSI
 model:
   name: universeg.universeg.UniverSeg
   args:
-    encoder_blocks: [ 16,32,64,128 ]
+    encoder_blocks: [ 32,64,128,256 ]
 
 trainset:
   name: datasetBUSI.mask_busi.MaskBUSI

@@ -7,10 +7,11 @@ from albumentations.pytorch import ToTensorV2
 
 # # BUSI
 MEAN, STD = 0.32963505387306213, 0.2224094420671463
+H = 384
 # # dataset_b
 # # MEAN, STD = 0.24798217310678738, 0.15146150910781206
 norm = A.Normalize((MEAN, MEAN, MEAN), (STD, STD, STD))
-resize = A.Resize(448, 448)
+resize = A.Resize(H, H)
 totensor = ToTensorV2()
 norm_totensor = A.Compose([norm, totensor])
 
@@ -24,7 +25,8 @@ def mask2tensor(mask):
 
 basic_aug = A.Compose(
     [
-        A.RandomResizedCrop(448, 448, scale=(0.5, 1)),
+        A.RandomResizedCrop(H, H, scale=(0.5, 1)),
+        # A.Resize(H, H),
         A.HorizontalFlip(p=0.5),
     ]
 )

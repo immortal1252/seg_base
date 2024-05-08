@@ -5,7 +5,7 @@ root_dir: &root_dir /home/4T/zcr/dataset/Dataset_BUSI
 model:
   name: universeg.universeg.UniverSeg
   args:
-    encoder_blocks: [ 16,32,64,128 ]
+    encoder_blocks: [ 64,128,256,512 ]
 
 trainset:
   name: datasetBUSI.mask_busi.MaskBUSI
@@ -29,7 +29,7 @@ criterion:
 optimizer:
   name: torch.optim.Adam
   args:
-    lr: 0.00005
+    lr: 0.00015
 
 scheduler:
   name: torch.optim.lr_scheduler.StepLR
