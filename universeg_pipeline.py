@@ -2,8 +2,31 @@ import argparse
 
 import torch
 from torch.utils.data import DataLoader
-
+import torch.utils.data.sampler
+import random
 import spgutils.pipeline
+
+
+class FixedLengthSampler(torch.utils.data.sampler.Sampler):
+    """
+    固定采样个数，随机打乱后循环采样
+    """
+
+    def __init__(self, dataset, num_samples):
+        super().__init__(None)
+        self.dataset = dataset
+        self.num_samples = num_samples
+
+    def __iter__(self):
+        indices = list(range(len(self.dataset)))
+        random.shuffle(indices)
+        cnt = 0
+        while cnt < self.num_samples:
+            yield indices[cnt % len(self.dataset)]
+            cnt += 1
+
+    def __len__(self):
+        return self.num_samples
 
 
 class UniversegPipeline(spgutils.pipeline.Pipeline):
@@ -11,18 +34,25 @@ class UniversegPipeline(spgutils.pipeline.Pipeline):
         batch_size = self.config["batch_size"]
         k = int(self.config["k"])
         train_loader = DataLoader(self.trainset, batch_size=batch_size, shuffle=True)
-        support_loader_list1 = [
+        support_loader_list_train = [
             DataLoader(self.trainset, batch_size=batch_size, shuffle=True)
             for _ in range(k)
         ]
 
-        support_loader_list2 = [
-            DataLoader(self.trainset, batch_size=batch_size, shuffle=True)
+        support_loader_list_test = [
+            DataLoader(
+                self.trainset,
+                sampler=FixedLengthSampler(self.trainset, len(self.testset)),
+                batch_size=batch_size,
+            )
             for _ in range(k)
         ]
 
         test_loader = DataLoader(self.testset, batch_size=batch_size, shuffle=False)
-        return (train_loader, support_loader_list1), (test_loader, support_loader_list2)
+        return (train_loader, support_loader_list_train), (
+            test_loader,
+            support_loader_list_test,
+        )
 
     def train_epoch(self, train_support_loader):
         train_loader, support_loader_list = train_support_loader
@@ -41,9 +71,6 @@ class UniversegPipeline(spgutils.pipeline.Pipeline):
             vs = vs.to(self.device)
             vys = vys.to(self.device)
 
-            batch_size = u.shape[0]
-            vs = vs[:batch_size]
-            vys = vys[:batch_size]
             try:
                 logits = self.model(u, vs, vys)
             except Exception as e:
@@ -77,9 +104,6 @@ class UniversegPipeline(spgutils.pipeline.Pipeline):
             vs = vs.to(self.device)
             vys = vys.to(self.device)
 
-            batch_size = u.shape[0]
-            vs = vs[:batch_size]
-            vys = vys[:batch_size]
             with torch.no_grad():
                 y_pred = self.model(u, vs, vys)
 

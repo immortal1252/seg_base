@@ -13,3 +13,16 @@ config/eunet,0.7577614922828425
 ./config/eunet_fixmatch.yaml,0.6626617640613642
 config/eunet,0.753823843247064
 config/eunet_batch*2,0.7647321660773869
+config/universeg,0.4880415409724588
+config/universeg1,0.6407277160734367
+config/universeg2,0.5532536572495139
+config/universeg3,0.7351707808765439
+config/universeg4,0.4025808825750607
+config/universeg5,0.7793255886076587
+config/universeg6,0.8306836486102235
+config/universeg7,0.8307787879707887
+universeg_config/universeg_base,0.5132444613063375
+universeg_config/universeg_lr-,0.452885943087264
+universeg_config/universeg_lr+,0.5362305705808221
+universeg_config/universeg_big,0.5840890945105971
+universeg_config/universeg_big,0.6329717892356616

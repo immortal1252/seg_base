@@ -75,6 +75,7 @@ class Pipeline:
             self.scheduler.step()
             self.logger.info(f"Epoch {epoch}  {loss}")
             if epoch == epochs - 1 or epoch % 10 == 1:
+                dice = self.evaluate(train_loader)
                 dice = self.evaluate(test_loader)
                 meter_queue.append(dice, epoch)
 
