@@ -49,7 +49,7 @@ class Conv2dAct(nn.Sequential):
         )
 
 
-class CrossOp(nn.Module):
+class CrossConv2dAct(nn.Module):
 
     def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, bias=True, nonlinearity="LeakyReLU",
                  init_distribution="kaiming_normal", init_bias=0.0):
@@ -83,7 +83,7 @@ class CrossBlock(nn.Module):
     def __init__(self, in_channels, cross_features, out_channels):
         super().__init__()
 
-        self.c1 = CrossOp(in_channels, cross_features)
+        self.c1 = CrossConv2dAct(in_channels, cross_features)
         self.c2 = Vmap(Conv2dAct(cross_features, out_channels))
         self.c1_ = Vmap(Conv2dAct(cross_features, out_channels))
 
@@ -99,14 +99,13 @@ class UniverSeg(nn.Module):
     def __init__(self, encoder_blocks, decoder_blocks=None, in_ch=(3, 4), out_channels=1):
         super().__init__()
         self.encoder_blocks = encoder_blocks
-        self.decoder_blocks = decoder_blocks
 
         self.downsample = nn.MaxPool2d(2, 2)
         self.upsample = nn.UpsamplingBilinear2d(scale_factor=2)
 
         self.enc_blocks = nn.ModuleList()
         self.dec_blocks = nn.ModuleList()
-        self.first_conv = CrossOp(in_ch, 16, kernel_size=7, stride=2, bias=False)
+        self.first_conv = CrossConv2dAct(in_ch, 16, kernel_size=7, stride=2, bias=False)
         encoder_blocks = list(map(as_2tuple, encoder_blocks))
         decoder_blocks = decoder_blocks or encoder_blocks[-2::-1]
         decoder_blocks = list(map(as_2tuple, decoder_blocks))

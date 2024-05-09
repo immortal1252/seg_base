@@ -51,7 +51,7 @@ class Pipeline:
                 cfg["name"], optimizer=self.optimizer, **cfg.get("args", {})
             )
         utils.seed_everything(42)
-        self.logger = spgutils.log.logger
+        self.logger = spgutils.log.new_logger(config.get("log_dir", ""))
         self.logger.info(os.getpid())
         self.logger.info(type(self))
         self.logger.info(self.path)
@@ -90,7 +90,7 @@ class Pipeline:
         for handler in self.logger.handlers:
             if isinstance(handler, logging.FileHandler):
                 log_name = handler.baseFilename
-        
+
         df.loc[len(df)] = {
             "desc": self.path[: self.path.rfind(".")],
             "dice": dice,
