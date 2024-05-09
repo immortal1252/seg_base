@@ -15,6 +15,7 @@ class CrossConv2d(nn.Module):
     Returns:
         tensor: B,Sx,Sy,Cout,H,W
     """
+
     """
     CrossConv2d is a convolutional layer that performs pairwise convolutions between elements of two input tensors.
 
@@ -65,8 +66,15 @@ class CrossConv2d(nn.Module):
     >>> output.shape  #(2, 3, 5, 7, 32, 32)
     """
 
-    def __init__(self, two_channels, out_channels, kernel_size: 3, stride=1, padding=0, bias: bool = True):
-
+    def __init__(
+        self,
+        two_channels,
+        out_channels,
+        kernel_size=3,
+        stride=1,
+        padding=0,
+        bias: bool = True,
+    ):
         super().__init__()
         if isinstance(two_channels, (list, tuple)):
             concat_channels = sum(two_channels)
