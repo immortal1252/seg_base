@@ -51,7 +51,10 @@ class Pipeline:
                 cfg["name"], optimizer=self.optimizer, **cfg.get("args", {})
             )
         utils.seed_everything(42)
-        self.logger = spgutils.log.new_logger(config.get("log_dir", ""))
+        log_dir = os.path.join(os.path.dirname(self.path), "log")
+        if not os.path.exists(log_dir):
+            os.mkdir(log_dir)
+        self.logger = spgutils.log.new_logger(log_dir)
         self.logger.info(os.getpid())
         self.logger.info(type(self))
         self.logger.info(self.path)

@@ -29,14 +29,13 @@ def get_nonlinearity(nonlinearity: Optional[str]) -> nn.Module:
     raise ValueError(f"nonlinearity {nonlinearity} not found")
 
 
-class Conv2dAct(nn.Sequential):
+class Conv2dBNAct(nn.Sequential):
     def __init__(
         self,
         in_channels: int,
         out_channels: int,
         kernel_size: int,
         stride: int,
-        bias: bool,
         nonlinearity: Optional[str],
     ):
         super().__init__()
@@ -47,20 +46,19 @@ class Conv2dAct(nn.Sequential):
             stride=stride,
             padding=kernel_size // 2,
             padding_mode="zeros",
-            bias=bias,
+            bias=False,
         )
-
+        self.bn = nn.BatchNorm2d(out_channels)
         self.nonlin = get_nonlinearity(nonlinearity)
 
 
-class CrossConv2dAct(nn.Module):
+class CrossConv2dBNAct(nn.Module):
     def __init__(
         self,
         in_channels: int,
         out_channels: int,
         kernel_size: int,
         stride: int,
-        bias: bool,
         nonlinearity: Optional[str],
     ):
         super().__init__()
@@ -71,14 +69,15 @@ class CrossConv2dAct(nn.Module):
             kernel_size=kernel_size,
             stride=stride,
             padding=kernel_size // 2,
-            bias=bias,
+            bias=False,
         )
-
+        self.bn = nn.BatchNorm2d(out_channels)
         self.nonlin = get_nonlinearity(nonlinearity)
 
     def forward(self, u, v):
         interaction = self.cross_conv(u, v).squeeze(dim=1)
-        interaction: torch.Tensor = vmap(self.nonlin, interaction)
+        interaction = vmap(self.bn, interaction)
+        interaction = vmap(self.nonlin, interaction)
         u_avg = interaction.mean(dim=1, keepdim=True)
         return u_avg, interaction
 
@@ -87,13 +86,9 @@ class CrossBlock(nn.Module):
     def __init__(self, in_channels, cross_features, out_channels, nonlinearity):
         super().__init__()
 
-        self.c1 = CrossConv2dAct(in_channels, cross_features, 3, 1, True, nonlinearity)
-        self.c2 = Vmap(
-            Conv2dAct(cross_features, out_channels, 3, 1, True, nonlinearity)
-        )
-        self.c1_ = Vmap(
-            Conv2dAct(cross_features, out_channels, 3, 1, True, nonlinearity)
-        )
+        self.c1 = CrossConv2dBNAct(in_channels, cross_features, 3, 1, nonlinearity)
+        self.c2 = Vmap(Conv2dBNAct(cross_features, out_channels, 3, 1, nonlinearity))
+        self.c1_ = Vmap(Conv2dBNAct(cross_features, out_channels, 3, 1, nonlinearity))
 
     def forward(self, u, v):
         u, v = self.c1(u, v)
@@ -120,8 +115,8 @@ class UniverSeg(nn.Module):
 
         self.enc_blocks = nn.ModuleList()
         self.dec_blocks = nn.ModuleList()
-        self.first_conv = CrossConv2dAct(
-            in_ch, 16, kernel_size=7, stride=2, bias=False, nonlinearity=nonlinearity
+        self.first_conv = CrossConv2dBNAct(
+            in_ch, 16, kernel_size=7, stride=2, nonlinearity=nonlinearity
         )
         encoder_blocks = list(map(as_2tuple, encoder_blocks))
         decoder_blocks = decoder_blocks or encoder_blocks[-2::-1]
@@ -145,12 +140,11 @@ class UniverSeg(nn.Module):
             in_ch = out_ch
             self.dec_blocks.append(block)
 
-        self.out_conv = Conv2dAct(
+        self.out_conv = Conv2dBNAct(
             in_ch,
             out_channels,
             1,
             1,
-            True,
             nonlinearity=None,
         )
         if init:
