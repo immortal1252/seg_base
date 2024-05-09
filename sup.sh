@@ -1,1 +1,1 @@
-python supervised.py --path config/eunet20.yaml > sup.out
+nohup python supervised.py --path config/eunet.yaml > sup.out &
