@@ -3,6 +3,5 @@ __pycache__/
 *.pt
 *.pth
 *.png
-*.log
 *.out
 temp

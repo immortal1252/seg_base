@@ -1,0 +1,68 @@
+2024-04-13 14:20:21,229 - mainlogger - INFO - 26100
+2024-04-13 14:20:21,229 - mainlogger - INFO - config/eunet.yaml
+2024-04-13 14:20:21,230 - mainlogger - INFO - {'batch_size': 8, 'epochs': 50, 'root_dir': '/home/4T/zcr/dataset/Dataset_BUSI', 'model': {'name': 'net.eunet.EUnet', 'args': {'ch_out': 1}}, 'trainset': {'name': 'datasetBUSI.mask_busi.MaskBUSI', 'args': {'root_dir': '/home/4T/zcr/dataset/Dataset_BUSI', 'image_names_path': 'labeled20.txt', 'mode': 'train'}}, 'testset': {'name': 'datasetBUSI.mask_busi.MaskBUSI', 'args': {'root_dir': '/home/4T/zcr/dataset/Dataset_BUSI', 'image_names_path': 'test.txt', 'mode': 'test'}}, 'criterion': {'name': 'spgutils.focalloss.BinaryFocalLoss'}, 'optimizer': {'name': 'torch.optim.Adam', 'args': {'lr': 0.001}}, 'scheduler': {'name': 'torch.optim.lr_scheduler.StepLR', 'args': {'step_size': 1, 'gamma': 0.99}}}
+2024-04-13 14:20:21,236 - mainlogger - INFO - 14.368911743164062
+2024-04-13 14:20:30,045 - mainlogger - INFO - Epoch 0  5.784263238310814
+2024-04-13 14:20:34,229 - mainlogger - INFO - Epoch 1  2.1025347113609314
+2024-04-13 14:20:42,327 - mainlogger - INFO - Dice score: 0.3173
+2024-04-13 14:20:42,328 - mainlogger - INFO - Accuracy: 0.6458
+2024-04-13 14:20:46,741 - mainlogger - INFO - Epoch 2  1.6953302398324013
+2024-04-13 14:20:51,082 - mainlogger - INFO - Epoch 3  1.026097845286131
+2024-04-13 14:20:55,519 - mainlogger - INFO - Epoch 4  0.7353167049586773
+2024-04-13 14:20:59,932 - mainlogger - INFO - Epoch 5  0.7696825750172138
+2024-04-13 14:21:04,382 - mainlogger - INFO - Epoch 6  0.593231774866581
+2024-04-13 14:21:08,647 - mainlogger - INFO - Epoch 7  0.6431597396731377
+2024-04-13 14:21:13,104 - mainlogger - INFO - Epoch 8  0.6179051585495472
+2024-04-13 14:21:17,483 - mainlogger - INFO - Epoch 9  0.5562796983867884
+2024-04-13 14:21:21,650 - mainlogger - INFO - Epoch 10  0.5136485174298286
+2024-04-13 14:21:25,980 - mainlogger - INFO - Epoch 11  0.4204490929841995
+2024-04-13 14:21:33,655 - mainlogger - INFO - Dice score: 0.5884
+2024-04-13 14:21:33,655 - mainlogger - INFO - Accuracy: 0.9163
+2024-04-13 14:21:38,027 - mainlogger - INFO - Epoch 12  0.414041755720973
+2024-04-13 14:21:42,508 - mainlogger - INFO - Epoch 13  0.5451250839978456
+2024-04-13 14:21:47,077 - mainlogger - INFO - Epoch 14  0.4570893794298172
+2024-04-13 14:21:51,580 - mainlogger - INFO - Epoch 15  0.4163139630109072
+2024-04-13 14:21:55,917 - mainlogger - INFO - Epoch 16  0.35076963156461716
+2024-04-13 14:22:00,345 - mainlogger - INFO - Epoch 17  0.3463527802377939
+2024-04-13 14:22:04,764 - mainlogger - INFO - Epoch 18  0.38253302685916424
+2024-04-13 14:22:09,152 - mainlogger - INFO - Epoch 19  0.4361176248639822
+2024-04-13 14:22:13,557 - mainlogger - INFO - Epoch 20  0.4327799417078495
+2024-04-13 14:22:17,850 - mainlogger - INFO - Epoch 21  0.3373824693262577
+2024-04-13 14:22:25,528 - mainlogger - INFO - Dice score: 0.6317
+2024-04-13 14:22:25,529 - mainlogger - INFO - Accuracy: 0.9375
+2024-04-13 14:22:29,924 - mainlogger - INFO - Epoch 22  0.442176079377532
+2024-04-13 14:22:34,372 - mainlogger - INFO - Epoch 23  0.419353062286973
+2024-04-13 14:22:38,789 - mainlogger - INFO - Epoch 24  0.32540069706737995
+2024-04-13 14:22:43,217 - mainlogger - INFO - Epoch 25  0.2767775161191821
+2024-04-13 14:22:47,639 - mainlogger - INFO - Epoch 26  0.2916892534121871
+2024-04-13 14:22:52,049 - mainlogger - INFO - Epoch 27  0.30706126242876053
+2024-04-13 14:22:56,427 - mainlogger - INFO - Epoch 28  0.26662174705415964
+2024-04-13 14:23:00,870 - mainlogger - INFO - Epoch 29  0.23919866234064102
+2024-04-13 14:23:05,211 - mainlogger - INFO - Epoch 30  0.29960858076810837
+2024-04-13 14:23:09,576 - mainlogger - INFO - Epoch 31  0.41712433844804764
+2024-04-13 14:23:17,097 - mainlogger - INFO - Dice score: 0.6487
+2024-04-13 14:23:17,097 - mainlogger - INFO - Accuracy: 0.936
+2024-04-13 14:23:21,544 - mainlogger - INFO - Epoch 32  0.4169751163572073
+2024-04-13 14:23:25,979 - mainlogger - INFO - Epoch 33  0.31494330801069736
+2024-04-13 14:23:30,285 - mainlogger - INFO - Epoch 34  0.28153340611606836
+2024-04-13 14:23:34,570 - mainlogger - INFO - Epoch 35  0.29032052308321
+2024-04-13 14:23:38,994 - mainlogger - INFO - Epoch 36  0.21644337754696608
+2024-04-13 14:23:43,350 - mainlogger - INFO - Epoch 37  0.2768158297985792
+2024-04-13 14:23:47,735 - mainlogger - INFO - Epoch 38  0.2199574764817953
+2024-04-13 14:23:52,075 - mainlogger - INFO - Epoch 39  0.28984691947698593
+2024-04-13 14:23:56,437 - mainlogger - INFO - Epoch 40  0.2605329863727093
+2024-04-13 14:24:00,871 - mainlogger - INFO - Epoch 41  0.2253124238923192
+2024-04-13 14:24:08,566 - mainlogger - INFO - Dice score: 0.6451
+2024-04-13 14:24:08,567 - mainlogger - INFO - Accuracy: 0.9314
+2024-04-13 14:24:13,078 - mainlogger - INFO - Epoch 42  0.2654503984376788
+2024-04-13 14:24:17,482 - mainlogger - INFO - Epoch 43  0.23613025061786175
+2024-04-13 14:24:21,859 - mainlogger - INFO - Epoch 44  0.20271018333733082
+2024-04-13 14:24:25,908 - mainlogger - INFO - Epoch 45  0.21577107161283493
+2024-04-13 14:24:30,237 - mainlogger - INFO - Epoch 46  0.17940203193575144
+2024-04-13 14:24:34,653 - mainlogger - INFO - Epoch 47  0.23464097548276186
+2024-04-13 14:24:39,057 - mainlogger - INFO - Epoch 48  0.17836864106357098
+2024-04-13 14:24:43,528 - mainlogger - INFO - Epoch 49  0.15827196557074785
+2024-04-13 14:24:51,128 - mainlogger - INFO - Dice score: 0.6636
+2024-04-13 14:24:51,128 - mainlogger - INFO - Accuracy: 0.941
+2024-04-13 14:24:51,132 - mainlogger - INFO - (45, 49)
+2024-04-13 14:24:51,132 - mainlogger - INFO - 0.6355063691534533

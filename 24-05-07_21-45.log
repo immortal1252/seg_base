@@ -1,0 +1,129 @@
+2024-05-07 21:45:33,051 - mainlogger - INFO - 10235
+2024-05-07 21:45:33,051 - mainlogger - INFO - <class '__main__.UniversegPipeline'>
+2024-05-07 21:45:33,051 - mainlogger - INFO - config/universeg4.yaml
+2024-05-07 21:45:33,051 - mainlogger - INFO - {'batch_size': 4, 'epochs': 100, 'k': 2, 'root_dir': '/home/4T/zcr/dataset/Dataset_BUSI', 'model': {'name': 'universeg.universeg.UniverSeg', 'args': {'encoder_blocks': [32, 64, 128, 256]}}, 'trainset': {'name': 'datasetBUSI.mask_busi.MaskBUSI', 'args': {'root_dir': '/home/4T/zcr/dataset/Dataset_BUSI', 'image_names_path': 'test.txt', 'mode': 'train'}}, 'testset': {'name': 'datasetBUSI.mask_busi.MaskBUSI', 'args': {'root_dir': '/home/4T/zcr/dataset/Dataset_BUSI', 'image_names_path': 'test.txt', 'mode': 'test'}}, 'criterion': {'name': 'spgutils.focalloss.BinaryFocalLoss', 'args': {'gamma': 1}}, 'optimizer': {'name': 'torch.optim.Adam', 'args': {'lr': 1e-05}}, 'scheduler': {'name': 'torch.optim.lr_scheduler.StepLR', 'args': {'step_size': 1, 'gamma': 0.99}}}
+2024-05-07 21:45:33,052 - mainlogger - INFO - 3.725052833557129
+2024-05-07 21:46:07,717 - mainlogger - INFO - Epoch 0  7.324477732181549
+2024-05-07 21:46:35,610 - mainlogger - INFO - Epoch 1  6.8158887177705765
+2024-05-07 21:47:02,457 - mainlogger - INFO - Dice score: 0.001217
+2024-05-07 21:47:02,458 - mainlogger - INFO - Accuracy: 0.8994
+2024-05-07 21:47:32,523 - mainlogger - INFO - Epoch 2  6.5364985242486
+2024-05-07 21:47:58,811 - mainlogger - INFO - Epoch 3  6.346693880856037
+2024-05-07 21:48:23,499 - mainlogger - INFO - Epoch 4  5.8953815549612045
+2024-05-07 21:48:55,461 - mainlogger - INFO - Epoch 5  6.014593169093132
+2024-05-07 21:49:19,037 - mainlogger - INFO - Epoch 6  6.087892264127731
+2024-05-07 21:49:46,333 - mainlogger - INFO - Epoch 7  6.003620117902756
+2024-05-07 21:50:17,368 - mainlogger - INFO - Epoch 8  6.1051536947488785
+2024-05-07 21:50:40,678 - mainlogger - INFO - Epoch 9  5.858064062893391
+2024-05-07 21:51:10,584 - mainlogger - INFO - Epoch 10  5.957142412662506
+2024-05-07 21:51:38,114 - mainlogger - INFO - Epoch 11  5.7986423298716545
+2024-05-07 21:52:04,520 - mainlogger - INFO - Dice score: 0.07349
+2024-05-07 21:52:04,521 - mainlogger - INFO - Accuracy: 0.901
+2024-05-07 21:52:36,739 - mainlogger - INFO - Epoch 12  6.068202622234821
+2024-05-07 21:53:08,111 - mainlogger - INFO - Epoch 13  5.728510037064552
+2024-05-07 21:53:31,846 - mainlogger - INFO - Epoch 14  5.806145451962948
+2024-05-07 21:54:02,180 - mainlogger - INFO - Epoch 15  5.7971389926970005
+2024-05-07 21:54:29,302 - mainlogger - INFO - Epoch 16  5.5821516290307045
+2024-05-07 21:54:53,030 - mainlogger - INFO - Epoch 17  5.5409983694553375
+2024-05-07 21:55:24,431 - mainlogger - INFO - Epoch 18  5.6431398540735245
+2024-05-07 21:55:51,236 - mainlogger - INFO - Epoch 19  5.670452684164047
+2024-05-07 21:56:16,534 - mainlogger - INFO - Epoch 20  5.631990492343903
+2024-05-07 21:56:48,352 - mainlogger - INFO - Epoch 21  5.594361066818237
+2024-05-07 21:57:16,910 - mainlogger - INFO - Dice score: 0.3
+2024-05-07 21:57:16,910 - mainlogger - INFO - Accuracy: 0.9085
+2024-05-07 21:57:42,376 - mainlogger - INFO - Epoch 22  5.949474029242992
+2024-05-07 21:58:12,993 - mainlogger - INFO - Epoch 23  5.568667411804199
+2024-05-07 21:58:36,601 - mainlogger - INFO - Epoch 24  5.612923629581928
+2024-05-07 21:59:05,922 - mainlogger - INFO - Epoch 25  5.5023648254573345
+2024-05-07 21:59:31,617 - mainlogger - INFO - Epoch 26  5.470187418162823
+2024-05-07 21:59:57,717 - mainlogger - INFO - Epoch 27  5.219757363200188
+2024-05-07 22:00:28,399 - mainlogger - INFO - Epoch 28  5.197666615247726
+2024-05-07 22:00:54,337 - mainlogger - INFO - Epoch 29  5.169601447880268
+2024-05-07 22:01:21,016 - mainlogger - INFO - Epoch 30  5.06239191442728
+2024-05-07 22:01:53,479 - mainlogger - INFO - Epoch 31  5.287557266652584
+2024-05-07 22:02:25,420 - mainlogger - INFO - Dice score: 0.2773
+2024-05-07 22:02:25,420 - mainlogger - INFO - Accuracy: 0.9078
+2024-05-07 22:02:48,714 - mainlogger - INFO - Epoch 32  5.607780821621418
+2024-05-07 22:03:22,050 - mainlogger - INFO - Epoch 33  5.343583278357983
+2024-05-07 22:03:50,162 - mainlogger - INFO - Epoch 34  5.391070283949375
+2024-05-07 22:04:14,542 - mainlogger - INFO - Epoch 35  5.402601949870586
+2024-05-07 22:04:47,994 - mainlogger - INFO - Epoch 36  5.539721772074699
+2024-05-07 22:05:14,413 - mainlogger - INFO - Epoch 37  5.106783404946327
+2024-05-07 22:05:40,595 - mainlogger - INFO - Epoch 38  5.2618623450398445
+2024-05-07 22:06:13,487 - mainlogger - INFO - Epoch 39  4.969203680753708
+2024-05-07 22:06:38,901 - mainlogger - INFO - Epoch 40  5.250267811119556
+2024-05-07 22:07:06,444 - mainlogger - INFO - Epoch 41  5.328562423586845
+2024-05-07 22:07:41,937 - mainlogger - INFO - Dice score: 0.3525
+2024-05-07 22:07:41,937 - mainlogger - INFO - Accuracy: 0.9126
+2024-05-07 22:08:07,797 - mainlogger - INFO - Epoch 42  5.323978535830975
+2024-05-07 22:08:33,900 - mainlogger - INFO - Epoch 43  5.4915077686309814
+2024-05-07 22:09:06,273 - mainlogger - INFO - Epoch 44  5.263870842754841
+2024-05-07 22:09:31,780 - mainlogger - INFO - Epoch 45  5.159676641225815
+2024-05-07 22:09:59,492 - mainlogger - INFO - Epoch 46  5.045958884060383
+2024-05-07 22:10:31,527 - mainlogger - INFO - Epoch 47  5.020069509744644
+2024-05-07 22:10:56,444 - mainlogger - INFO - Epoch 48  4.926336400210857
+2024-05-07 22:11:25,761 - mainlogger - INFO - Epoch 49  5.233775302767754
+2024-05-07 22:11:58,154 - mainlogger - INFO - Epoch 50  5.163484200835228
+2024-05-07 22:12:23,222 - mainlogger - INFO - Epoch 51  5.315225809812546
+2024-05-07 22:12:53,896 - mainlogger - INFO - Dice score: 0.4686
+2024-05-07 22:12:53,896 - mainlogger - INFO - Accuracy: 0.9053
+2024-05-07 22:13:26,105 - mainlogger - INFO - Epoch 52  5.106265489012003
+2024-05-07 22:13:52,012 - mainlogger - INFO - Epoch 53  5.074131701141596
+2024-05-07 22:14:18,078 - mainlogger - INFO - Epoch 54  5.344762876629829
+2024-05-07 22:14:50,084 - mainlogger - INFO - Epoch 55  5.243678420782089
+2024-05-07 22:15:12,582 - mainlogger - INFO - Epoch 56  5.23969117552042
+2024-05-07 22:15:42,287 - mainlogger - INFO - Epoch 57  5.008581101894379
+2024-05-07 22:16:13,534 - mainlogger - INFO - Epoch 58  5.063613057136536
+2024-05-07 22:16:37,019 - mainlogger - INFO - Epoch 59  5.014447256922722
+2024-05-07 22:17:07,196 - mainlogger - INFO - Epoch 60  5.041937444359064
+2024-05-07 22:17:36,137 - mainlogger - INFO - Epoch 61  5.009399898350239
+2024-05-07 22:18:02,943 - mainlogger - INFO - Dice score: 0.3566
+2024-05-07 22:18:02,943 - mainlogger - INFO - Accuracy: 0.9155
+2024-05-07 22:18:32,938 - mainlogger - INFO - Epoch 62  5.1079549714922905
+2024-05-07 22:19:02,177 - mainlogger - INFO - Epoch 63  4.775269117206335
+2024-05-07 22:19:25,633 - mainlogger - INFO - Epoch 64  4.813693523406982
+2024-05-07 22:19:56,912 - mainlogger - INFO - Epoch 65  4.625538796186447
+2024-05-07 22:20:22,227 - mainlogger - INFO - Epoch 66  4.880144812166691
+2024-05-07 22:20:48,554 - mainlogger - INFO - Epoch 67  4.857570253312588
+2024-05-07 22:21:21,484 - mainlogger - INFO - Epoch 68  5.011809013783932
+2024-05-07 22:21:45,416 - mainlogger - INFO - Epoch 69  4.825264111161232
+2024-05-07 22:22:12,534 - mainlogger - INFO - Epoch 70  4.849152188748121
+2024-05-07 22:22:44,185 - mainlogger - INFO - Epoch 71  4.901046201586723
+2024-05-07 22:23:11,873 - mainlogger - INFO - Dice score: 0.4098
+2024-05-07 22:23:11,873 - mainlogger - INFO - Accuracy: 0.9172
+2024-05-07 22:23:39,667 - mainlogger - INFO - Epoch 72  4.996898114681244
+2024-05-07 22:24:11,064 - mainlogger - INFO - Epoch 73  4.911585509777069
+2024-05-07 22:24:35,241 - mainlogger - INFO - Epoch 74  4.9245478212833405
+2024-05-07 22:25:04,059 - mainlogger - INFO - Epoch 75  5.080176431685686
+2024-05-07 22:25:34,643 - mainlogger - INFO - Epoch 76  4.893439460545778
+2024-05-07 22:25:58,151 - mainlogger - INFO - Epoch 77  4.725772507488728
+2024-05-07 22:26:28,200 - mainlogger - INFO - Epoch 78  4.7412594966590405
+2024-05-07 22:26:57,530 - mainlogger - INFO - Epoch 79  4.830607615411282
+2024-05-07 22:27:22,358 - mainlogger - INFO - Epoch 80  4.810378789901733
+2024-05-07 22:27:53,374 - mainlogger - INFO - Epoch 81  4.98017043620348
+2024-05-07 22:28:27,175 - mainlogger - INFO - Dice score: 0.3945
+2024-05-07 22:28:27,175 - mainlogger - INFO - Accuracy: 0.9172
+2024-05-07 22:28:53,604 - mainlogger - INFO - Epoch 82  4.854561388492584
+2024-05-07 22:29:21,676 - mainlogger - INFO - Epoch 83  5.016137797385454
+2024-05-07 22:29:52,701 - mainlogger - INFO - Epoch 84  4.701667048037052
+2024-05-07 22:30:18,999 - mainlogger - INFO - Epoch 85  4.958283357322216
+2024-05-07 22:30:47,114 - mainlogger - INFO - Epoch 86  4.85145815834403
+2024-05-07 22:31:15,470 - mainlogger - INFO - Epoch 87  4.861161440610886
+2024-05-07 22:31:39,814 - mainlogger - INFO - Epoch 88  5.253781832754612
+2024-05-07 22:32:11,127 - mainlogger - INFO - Epoch 89  4.92968987673521
+2024-05-07 22:32:38,174 - mainlogger - INFO - Epoch 90  4.724803552031517
+2024-05-07 22:33:03,204 - mainlogger - INFO - Epoch 91  4.855682946741581
+2024-05-07 22:33:38,950 - mainlogger - INFO - Dice score: 0.4469
+2024-05-07 22:33:38,950 - mainlogger - INFO - Accuracy: 0.9188
+2024-05-07 22:34:08,253 - mainlogger - INFO - Epoch 92  4.714135572314262
+2024-05-07 22:34:34,744 - mainlogger - INFO - Epoch 93  5.092890202999115
+2024-05-07 22:35:04,731 - mainlogger - INFO - Epoch 94  4.697162561118603
+2024-05-07 22:35:33,200 - mainlogger - INFO - Epoch 95  4.793735217303038
+2024-05-07 22:35:57,864 - mainlogger - INFO - Epoch 96  4.7760156244039536
+2024-05-07 22:36:29,296 - mainlogger - INFO - Epoch 97  4.7704527750611305
+2024-05-07 22:36:56,644 - mainlogger - INFO - Epoch 98  4.765320025384426
+2024-05-07 22:37:20,746 - mainlogger - INFO - Epoch 99  4.746359366923571
+2024-05-07 22:37:55,507 - mainlogger - INFO - Dice score: 0.4026
+2024-05-07 22:37:55,508 - mainlogger - INFO - Accuracy: 0.9166
+2024-05-07 22:37:55,508 - mainlogger - INFO - (87, 91)
+2024-05-07 22:37:55,508 - mainlogger - INFO - 0.41528039991530824

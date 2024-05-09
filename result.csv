@@ -30,9 +30,10 @@ universeg_config/universeg_base2,0.5347780472093036,
 universeg_config/universeg_base2_big,0.5964866382644743,
 universeg_config/universeg_base2_big_batch,0.6240902426696652,
 universeg_config/universeg_base2_big_batch_lr-,0.560078226947197,
-universeg_config/universeg_base2_big_batch_lr+,0.49846216317979286,
+universeg_config/universeg_base2_big_batch_lr+,0.4984621631797928,
 config/eunet20,0.5626468958739962,
 universeg_config/universeg_base2_full,0.7720302293837601,/home/4T/zcr/seg_base/24-05-08_19-16.log
 universeg_config/big/lr1,0.6443931871253733,/home/4T/zcr/seg_base/universeg_config/big/log/24-05-09_11-16.log
-
-
+universeg_config/big/lr2,0.601988961640638,/home/4T/zcr/seg_base/universeg_config/big/log/24-05-09_12-05.log
+universeg_config/leakyrelu/kamingnormal,0.5780817736604944,/home/4T/zcr/seg_base/universeg_config/leakyrelu/log/24-05-09_13-06.log
+universeg_config/leakyrelu/noinit,0.542303883599855,/home/4T/zcr/seg_base/universeg_config/leakyrelu/log/24-05-09_13-28.log
