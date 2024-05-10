@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 import torch.utils.data.sampler
 import random
 import spgutils.pipeline
+from typing import Sized
 
 
 class FixedLengthSampler(torch.utils.data.sampler.Sampler):
@@ -39,6 +40,7 @@ class UniversegPipeline(spgutils.pipeline.Pipeline):
             for _ in range(k)
         ]
 
+        assert isinstance(self.testset, Sized)  # escape warning
         support_loader_list_test = [
             DataLoader(
                 self.trainset,
@@ -49,9 +51,30 @@ class UniversegPipeline(spgutils.pipeline.Pipeline):
         ]
 
         test_loader = DataLoader(self.testset, batch_size=batch_size, shuffle=False)
-        return (train_loader, support_loader_list_train), (
-            test_loader,
-            support_loader_list_test,
+
+        if hasattr(self, "validset"):
+            valid_loader = DataLoader(
+                self.validset, batch_size=batch_size, shuffle=False
+            )
+            assert isinstance(self.validset, Sized)  # escape warning
+            support_loader_list_valid = [
+                DataLoader(
+                    self.trainset,
+                    sampler=FixedLengthSampler(self.trainset, len(self.validset)),
+                    batch_size=batch_size,
+                )
+                for _ in range(k)
+            ]
+        else:
+            valid_loader = None
+            support_loader_list_valid = None
+        return (
+            (train_loader, support_loader_list_train),
+            (
+                test_loader,
+                support_loader_list_test,
+            ),
+            (valid_loader, support_loader_list_valid),
         )
 
     def train_epoch(self, train_support_loader):

@@ -5,16 +5,15 @@ import torch
 import yaml
 from tqdm import tqdm
 
-from datasetBUSI.base_busi import save_img_from_tensor
 import spgutils.meter_queue
 import spgutils.log
 from spgutils import utils
 from torch.optim.optimizer import Optimizer
-from torch.optim.lr_scheduler import _LRScheduler
+from torch.optim.lr_scheduler import _LRScheduler, ReduceLROnPlateau
 from torchvision.transforms import transforms
 from torch.utils.data import Dataset, DataLoader
 from torch import nn
-from typing import Dict
+from typing import Dict, Union
 from PIL import Image
 
 
@@ -35,6 +34,9 @@ class Pipeline:
         if "testset" in config:
             cfg = config["testset"]
             self.testset: Dataset = utils.create(cfg["name"], **cfg.get("args", {}))
+        if "validset" in config:
+            cfg = config["validset"]
+            self.validset: Dataset = utils.create(cfg["name"], **cfg.get("args", {}))
         if "criterion" in config:
             cfg = config["criterion"]
             self.criterion: nn.Module = utils.create(
@@ -47,9 +49,14 @@ class Pipeline:
             )
         if "scheduler" in config:
             cfg = config["scheduler"]
-            self.scheduler: _LRScheduler = utils.create(
+            self.scheduler: Union[_LRScheduler, ReduceLROnPlateau] = utils.create(
                 cfg["name"], optimizer=self.optimizer, **cfg.get("args", {})
             )
+            if isinstance(self.scheduler, ReduceLROnPlateau) and not hasattr(
+                self, "validset"
+            ):
+                raise Exception("use ReduceLROnPlateau must provide validset")
+
         utils.seed_everything(42)
         log_dir = os.path.join(os.path.dirname(self.path), "log")
         if not os.path.exists(log_dir):
@@ -65,22 +72,49 @@ class Pipeline:
         batch_size = self.config["batch_size"]
         train_loader = DataLoader(self.trainset, batch_size=batch_size, shuffle=True)
         test_loader = DataLoader(self.testset, batch_size=batch_size, shuffle=False)
-        return train_loader, test_loader
+        if hasattr(self, "validset"):
+            valid_loader = DataLoader(
+                self.validset, batch_size=batch_size, shuffle=False
+            )
+        else:
+            valid_loader = None
+        return train_loader, test_loader, valid_loader
 
     def train(self):
-        train_loader, test_loader = self.prepare_data()
+        train_loader, test_loader, valid_loader = self.prepare_data()
         epochs = self.config["epochs"]
         dice = -1
 
         meter_queue = spgutils.meter_queue.MeterQueue(5)
         for epoch in tqdm(range(epochs)):
             loss = self.train_epoch(train_loader)
-            self.scheduler.step()
+            if hasattr(self, "scheduler"):
+                if (
+                    isinstance(self.scheduler, ReduceLROnPlateau)
+                    and epoch >= epochs * 0.4
+                ):
+                    assert valid_loader is not None  # escape warning
+                    self.logger.info("valid")
+                    dice = self.evaluate(valid_loader)
+                    meter_queue.append(dice, epoch)
+
+                    old_lr = self.optimizer.param_groups[0]["lr"]
+                    self.scheduler.step(dice)
+                    new_lr = self.optimizer.param_groups[0]["lr"]
+                    if old_lr != new_lr:
+                        self.logger.info(f"{old_lr}->{new_lr}")
+
+                elif isinstance(self.scheduler, _LRScheduler):
+                    self.scheduler.step()
+
             self.logger.info(f"Epoch {epoch}  {loss}")
             if epoch == epochs - 1 or epoch % 10 == 1:
+                self.logger.info("train")
                 dice = self.evaluate(train_loader)
+                self.logger.info("test")
                 dice = self.evaluate(test_loader)
-                meter_queue.append(dice, epoch)
+
+            self.logger.info("*" * 80)
 
         self.post(meter_queue, dice)
 

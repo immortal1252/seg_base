@@ -10,12 +10,11 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
-            // "program": "fixmatch.py",
+            // "program": "universeg_pipeline.py",
             // "program": "supervised.py",
             "env": { "CUDA_VISIBLE_DEVICES": "0" },
-            // "args": [ "--impl","fixmatch_ema.FixMatchEMA","--path", "config/eunet_fixmatch.yaml" ],
-            // "args": [ "--path", "config/universeg_copy.yaml" ],
-            "args": [ "--path", "universeg_config/debug.yaml" ],
+            "args": [ "--path", "universeg_config/batchnorm/v2.yaml" ],
+            // "args": [ "--path", "universeg_config/debug.yaml" ],
             "console": "integratedTerminal",
             "justMyCode": false
         }

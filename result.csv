@@ -1,6 +1,4 @@
 desc,dice,log
-config/eunet,0.0832560070074639,
-config/eunet,0.8740972574897315,
 config/eunet,0.6246631302956156,
 config/eunet_fixmatch.yaml,0.612250015453132,
 config/eunet,0.6636245347429468,
@@ -37,3 +35,17 @@ universeg_config/big/lr1,0.6443931871253733,/home/4T/zcr/seg_base/universeg_conf
 universeg_config/big/lr2,0.601988961640638,/home/4T/zcr/seg_base/universeg_config/big/log/24-05-09_12-05.log
 universeg_config/leakyrelu/kamingnormal,0.5780817736604944,/home/4T/zcr/seg_base/universeg_config/leakyrelu/log/24-05-09_13-06.log
 universeg_config/leakyrelu/noinit,0.542303883599855,/home/4T/zcr/seg_base/universeg_config/leakyrelu/log/24-05-09_13-28.log
+universeg_config/batchnorm/lr1,0.6137760286567429,/home/4T/zcr/seg_base/universeg_config/batchnorm/log/24-05-09_14-28.log
+universeg_config/big/lr1,0.5768657982250428,/home/4T/zcr/seg_base/universeg_config/big/log/24-05-09_14-42.log
+universeg_config/relu/kamingnormal,0.600964089218004,/home/4T/zcr/seg_base/universeg_config/relu/log/24-05-09_14-55.log
+universeg_config/small/lr1,0.4527217908947049,/home/4T/zcr/seg_base/universeg_config/small/log/24-05-09_15-30.log
+universeg_config/small/lr2,0.4119240059686908,/home/4T/zcr/seg_base/universeg_config/small/log/24-05-09_15-41.log
+universeg_config/batchnorm/big,0.5791626987981447,/home/4T/zcr/seg_base/universeg_config/batchnorm/log/24-05-09_19-57.log
+universeg_config/batchnorm/bigk,0.6106196017090191,/home/4T/zcr/seg_base/universeg_config/batchnorm/log/24-05-09_20-22.log
+universeg_config/batchnorm/bigk,0.5564111248102425,/home/4T/zcr/seg_base/universeg_config/batchnorm/log/24-05-09_20-46.log
+universeg_config/batchnorm/init_relu,0.5737120406989913,/home/4T/zcr/seg_base/universeg_config/batchnorm/log/24-05-09_21-30.log
+universeg_config/batchnorm/full,0.744404703133497,/home/4T/zcr/seg_base/universeg_config/batchnorm/log/24-05-09_22-07.log
+universeg_config/batchnorm/v2,0.6007431812650931,/home/4T/zcr/seg_base/universeg_config/batchnorm/log/24-05-10_11-58.log
+universeg_config/reduce/14m,0.5002945608321588,/home/4T/zcr/seg_base/universeg_config/reduce/log/24-05-10_13-14.log
+universeg_config/reduce/20m,0.6071008764001122,/home/4T/zcr/seg_base/universeg_config/reduce/log/24-05-10_14-09.log
+universeg_config/reduce/37m,0.641430245297551,/home/4T/zcr/seg_base/universeg_config/reduce/log/24-05-10_15-09.log
