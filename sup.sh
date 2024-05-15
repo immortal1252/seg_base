@@ -1,1 +1,1 @@
-nohup python supervised.py --path config/eunet.yaml > sup.out &
+nohup python supervised.py --path  aaunet_config/bigmore.yaml > sup.out &
