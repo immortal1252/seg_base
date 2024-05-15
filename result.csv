@@ -49,3 +49,6 @@ universeg_config/batchnorm/v2,0.6007431812650931,/home/4T/zcr/seg_base/universeg
 universeg_config/reduce/14m,0.5002945608321588,/home/4T/zcr/seg_base/universeg_config/reduce/log/24-05-10_13-14.log
 universeg_config/reduce/20m,0.6071008764001122,/home/4T/zcr/seg_base/universeg_config/reduce/log/24-05-10_14-09.log
 universeg_config/reduce/37m,0.641430245297551,/home/4T/zcr/seg_base/universeg_config/reduce/log/24-05-10_15-09.log
+aaunet_config/first,0.6095148135365389,/seg_base/aaunet_config/log/24-05-15_14-41.log
+aaunet_config/big,0.6452005336315112,/seg_base/aaunet_config/log/24-05-15_14-58.log
+aaunet_config/bigmore,0.6482542393688255,/seg_base/aaunet_config/log/24-05-15_15-19.log
