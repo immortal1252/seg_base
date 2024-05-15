@@ -3,7 +3,7 @@ from torch import nn
 import einops as E
 
 
-class AAUnet(nn.Module):
+class Unet(nn.Module):
     def __init__(self, channels: list, in_channels=1, out_channels=1, act="ReLU"):
         super().__init__()
         if channels is None:
