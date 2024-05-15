@@ -49,6 +49,11 @@ universeg_config/batchnorm/v2,0.6007431812650931,/home/4T/zcr/seg_base/universeg
 universeg_config/reduce/14m,0.5002945608321588,/home/4T/zcr/seg_base/universeg_config/reduce/log/24-05-10_13-14.log
 universeg_config/reduce/20m,0.6071008764001122,/home/4T/zcr/seg_base/universeg_config/reduce/log/24-05-10_14-09.log
 universeg_config/reduce/37m,0.641430245297551,/home/4T/zcr/seg_base/universeg_config/reduce/log/24-05-10_15-09.log
-aaunet_config/first,0.6095148135365389,/seg_base/aaunet_config/log/24-05-15_14-41.log
-aaunet_config/big,0.6452005336315112,/seg_base/aaunet_config/log/24-05-15_14-58.log
-aaunet_config/bigmore,0.6482542393688255,/seg_base/aaunet_config/log/24-05-15_15-19.log
+aaunet_config/15m,0.6095148135365389,/seg_base/aaunet_config/log/24-05-15_14-41.log
+aaunet_config/24m,0.6452005336315112,/seg_base/aaunet_config/log/24-05-15_14-58.log
+aaunet_config/50m,0.6482542393688255,/seg_base/aaunet_config/log/24-05-15_15-19.log
+unet_config/18m,0.6300693695157821,/seg_base/unet_config/log/24-05-15_16-36.log
+unet_config/attnunet,0.6249755489708835,/seg_base/unet_config/log/24-05-15_16-52.log
+unet_config/skunet,0.6128525846717378,/seg_base/unet_config/log/24-05-15_21-27.log
+unet_config/skunet,0.5893927957113451,/seg_base/unet_config/log/24-05-15_21-49.log
+unet_config/attnunet,0.6458854800766914,/seg_base/unet_config/log/24-05-15_22-13.log

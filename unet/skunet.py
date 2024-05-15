@@ -5,7 +5,7 @@ from .blocks import *
 
 
 class SKUNet(nn.Module):
-    def __init__(self, channels: list, in_channels, out_channels, act="ReLU"):
+    def __init__(self, channels: list, in_channels=1, out_channels=1, act="ReLU"):
         super().__init__()
         if channels is None:
             channels = [32, 64, 128, 256]
@@ -63,7 +63,7 @@ class SKBlock(nn.Module):
             nn.BatchNorm1d(d),
             nn.ReLU(inplace=True),
             nn.Linear(d, out_channels),
-            nn.Sigmoid()
+            nn.Sigmoid(),
         )
 
     def forward(self, x):
