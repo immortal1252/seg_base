@@ -1,10 +1,11 @@
-from torch import nn
-import torch
+import einops
+import torch.nn
+
 from .blocks import *
 
 
-class Unet(nn.Module):
-    def __init__(self, channels: list, in_channels=1, out_channels=1, act="ReLU"):
+class SKUNet(nn.Module):
+    def __init__(self, channels: list, in_channels, out_channels, act="ReLU"):
         super().__init__()
         if channels is None:
             channels = [32, 64, 128, 256]
@@ -12,8 +13,8 @@ class Unet(nn.Module):
         self.encoder = nn.ModuleList()
         for channel in channels:
             block = nn.Sequential(
-                ConvBNAct(in_channels, channel, 3, 1, act),
-                ConvBNAct(channel, channel, 3, 1, act)
+                SKBlock(in_channels, channel, act),
+                SKBlock(channel, channel, act),
             )
             self.encoder.append(block)
             in_channels = channel
@@ -24,8 +25,8 @@ class Unet(nn.Module):
         for i in range(len(self.encoder) - 2, -1, -1):
             self.upsamples.append(Upsample(channels[i + 1], channels[i]))
             block = nn.Sequential(
-                ConvBNAct(channels[i] * 2, channels[i], 3, 1, act),
-                ConvBNAct(channels[i], channels[i], 3, 1, act),
+                SKBlock(channels[i] * 2, channels[i], act),
+                SKBlock(channels[i], channels[i], act),
             )
             self.decoder.append(block)
         self.downsample = nn.MaxPool2d(2, 2)
@@ -48,3 +49,26 @@ class Unet(nn.Module):
         x = self.out(x)
         return x
 
+
+class SKBlock(nn.Module):
+    def __init__(self, in_channels, out_channels, act, r=32):
+        super().__init__()
+        self.conv1 = ConvBNAct(in_channels, out_channels, 3, 2, act)
+        self.conv2 = ConvBNAct(in_channels, out_channels, 3, 1, act)
+        d = max(32, out_channels // r)
+        self.layer = nn.Sequential(
+            nn.AdaptiveAvgPool2d(1),
+            nn.Flatten(),
+            nn.Linear(out_channels, d),
+            nn.BatchNorm1d(d),
+            nn.ReLU(inplace=True),
+            nn.Linear(d, out_channels),
+            nn.Sigmoid()
+        )
+
+    def forward(self, x):
+        x1 = self.conv1(x)
+        x2 = self.conv2(x)
+        alpha = self.layer(x1 + x2)
+        alpha = einops.rearrange(alpha, "b c -> b c 1 1")
+        return alpha * x1 + (1 - alpha) * x2

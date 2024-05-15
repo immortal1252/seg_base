@@ -1,9 +1,10 @@
 import torch
 from torch import nn
 import einops as E
+from .blocks import *
 
 
-class Unet(nn.Module):
+class AAUNet(nn.Module):
     def __init__(self, channels: list, in_channels=1, out_channels=1, act="ReLU"):
         super().__init__()
         if channels is None:
@@ -62,7 +63,7 @@ class ChannelAttention(nn.Module):
         # b,c,h,w
         alpha = self.layer(x)
         # b,c
-        alpha = E.repeat(alpha, "b c -> b c 1 1")
+        alpha = E.rearrange(alpha, "b c -> b c 1 1")
         return alpha * x1, (1 - alpha) * x2
 
 
@@ -106,20 +107,3 @@ class HAAM(nn.Module):
 
         out = self.out(x1 + x23)
         return out
-
-
-class ConvBNAct(nn.Sequential):
-    def __init__(self, in_channels, out_channels, kernel_size, dilation, act="ReLU"):
-        super().__init__()
-        padding = dilation * (kernel_size - 1) // 2
-        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size, 1, padding, dilation,
-                              bias=False)
-        self.bn = nn.BatchNorm2d(out_channels)
-        self.act = getattr(nn, act)()
-
-
-class Upsample(nn.Sequential):
-    def __init__(self, in_channels, out_channels):
-        super().__init__()
-        self.conv = nn.Conv2d(in_channels, out_channels, 1, 1, 0, bias=False)
-        self.up = nn.UpsamplingBilinear2d(scale_factor=2)
