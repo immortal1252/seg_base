@@ -3,10 +3,10 @@ import torch
 
 
 class ConvBNAct(nn.Sequential):
-    def __init__(self, in_channels, out_channels, kernel_size, dilation, act="ReLU"):
+    def __init__(self, in_channels, out_channels, kernel_size, dilation=1, stride=1, act="ReLU"):
         super().__init__()
         padding = dilation * (kernel_size - 1) // 2
-        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size, 1, padding, dilation,
+        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, dilation,
                               bias=False)
         self.bn = nn.BatchNorm2d(out_channels)
         self.act = get_act(act)
@@ -19,7 +19,7 @@ class Upsample(nn.Sequential):
         self.up = nn.UpsamplingBilinear2d(scale_factor=2)
 
 
-def get_act(act):
+def get_act(act: str):
     if hasattr(nn, act):
         return getattr(nn, act)()
     return None
