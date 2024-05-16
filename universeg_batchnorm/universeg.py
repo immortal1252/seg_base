@@ -77,7 +77,8 @@ class UniverSeg(nn.Module):
         # [-2::-1]
         for i in range(len(self.encoders) - 2, -1, -1):
             self.upsamples.append(nn.UpsamplingBilinear2d(scale_factor=2))
-            block = CrossBlock((2 * channels[i + 1], 2 * channels[i]), channels[i], channels[i], act)
+            block = CrossBlock((channels[i + 1] + channels[i], channels[i + 1] + channels[i]), channels[i], channels[i],
+                               act)
             self.decoders.append(block)
 
         self.out_conv = ConvBNAct(channels[0], out_channels, kernel_size=1, act="")
