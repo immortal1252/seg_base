@@ -9,8 +9,7 @@ class ConvBNAct(nn.Sequential):
         self.conv = nn.Conv2d(in_channels, out_channels, kernel_size, 1, padding, dilation,
                               bias=False)
         self.bn = nn.BatchNorm2d(out_channels)
-        if hasattr(nn, act):
-            self.act = getattr(nn, act)()
+        self.act = get_act(act)
 
 
 class Upsample(nn.Sequential):
@@ -18,3 +17,9 @@ class Upsample(nn.Sequential):
         super().__init__()
         self.conv = nn.Conv2d(in_channels, out_channels, 1, 1, 0, bias=False)
         self.up = nn.UpsamplingBilinear2d(scale_factor=2)
+
+
+def get_act(act):
+    if hasattr(nn, act):
+        return getattr(nn, act)()
+    return None
