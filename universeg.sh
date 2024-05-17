@@ -1,1 +1,2 @@
-python -u universeg_pipeline.py --path universeg_config/init_relu2.yaml
+python -u universeg_pipeline.py --path universeg_config/test.yaml
+shutdown -h now

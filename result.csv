@@ -58,3 +58,5 @@ unet_config/skunet,0.6128525846717378,/seg_base/unet_config/log/24-05-15_21-27.l
 unet_config/skunet,0.5893927957113451,/seg_base/unet_config/log/24-05-15_21-49.log
 unet_config/attnunet,0.6458854800766914,/seg_base/unet_config/log/24-05-15_22-13.log
 mnet_config/mnet,0.3482117856951727,/seg_base/mnet_config/log/24-05-16_17-03.log
+universeg_config/init_relu2,0.6098331649085678,/seg_base/universeg_config/log/24-05-16_19-59.log
+universeg_config/test,0.5671688012918354,/seg_base/universeg_config/log/24-05-16_20-33.log
