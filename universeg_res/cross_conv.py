@@ -39,7 +39,9 @@ class CrossConv2d(nn.Module):
 
             block = ConvBNAct(in_channels_t, out_channels, kernel_size=kernel_size_t, stride=stride_t, act=act_t)
             conv.append(block)
+
         self.conv = nn.Sequential(*conv)
+        self.se = ChannelAttention(out_channels)
 
         self.act = get_act(act)
 
@@ -66,10 +68,37 @@ class CrossConv2d(nn.Module):
         xy = torch.cat([us, vs], dim=3)
 
         batched_xy = E.rearrange(xy, "b 1 s c h w -> (b s) c h w")
-        batched_output = self.conv(batched_xy) + self.skip(batched_xy)
+        identity = self.skip(batched_xy)
+
+        batched_output = self.conv(batched_xy)
+        batched_output = self.se(batched_output)
+
+        batched_output = batched_output + identity
+
         batched_output = self.act(batched_output)
 
         output = E.rearrange(
             batched_output, "(b s) c h w -> b 1 s c h w", b=B, s=S
         )
         return output
+
+
+class ChannelAttention(nn.Module):
+    def __init__(self, in_channels, r=4):
+        super().__init__()
+        self.layer = nn.Sequential(
+            nn.AdaptiveAvgPool2d(1),
+            nn.Flatten(),
+            nn.Linear(in_channels, in_channels // r, bias=False),
+            nn.BatchNorm1d(in_channels // r),
+            nn.ReLU(inplace=True),
+            nn.Linear(in_channels // r, in_channels, bias=False),
+            nn.Sigmoid()
+        )
+
+    def forward(self, x):
+        # b,c,h,w
+        alpha = self.layer(x)
+        # b,c
+        alpha = E.rearrange(alpha, "b c -> b c 1 1")
+        return alpha * x
