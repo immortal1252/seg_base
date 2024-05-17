@@ -53,8 +53,8 @@ class SKUNet(nn.Module):
 class SKBlock(nn.Module):
     def __init__(self, in_channels, out_channels, act, r=32):
         super().__init__()
-        self.conv1 = ConvBNAct(in_channels, out_channels, 3, 2, act)
-        self.conv2 = ConvBNAct(in_channels, out_channels, 3, 1, act)
+        self.conv1 = ConvBNAct(in_channels, out_channels, 3, dilation=2, act=act)
+        self.conv2 = ConvBNAct(in_channels, out_channels, 3, dilation=1, act=act)
         d = max(32, out_channels // r)
         self.layer = nn.Sequential(
             nn.AdaptiveAvgPool2d(1),

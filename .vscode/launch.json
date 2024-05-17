@@ -13,7 +13,7 @@
             // "program": "universeg_pipeline.py",
             // "program": "supervised.py",
             "env": { "CUDA_VISIBLE_DEVICES": "0" },
-            "args": [ "--path", "mnet_config/mnet.yaml" ],
+            "args": [ "--path", "full/unet.yaml" ],
             // "args": [ "--path", "universeg_config/debug.yaml" ],
             "console": "integratedTerminal",
             "justMyCode": false

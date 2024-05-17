@@ -60,3 +60,8 @@ unet_config/attnunet,0.6458854800766914,/seg_base/unet_config/log/24-05-15_22-13
 mnet_config/mnet,0.3482117856951727,/seg_base/mnet_config/log/24-05-16_17-03.log
 universeg_config/init_relu2,0.6098331649085678,/seg_base/universeg_config/log/24-05-16_19-59.log
 universeg_config/test,0.5671688012918354,/seg_base/universeg_config/log/24-05-16_20-33.log
+universeg_config/base,0.5896173440676714,/seg_base/universeg_config/log/24-05-17_11-28.log
+universeg_config/res,0.6150412319153584,/seg_base/universeg_config/log/24-05-17_12-11.log
+universeg_config/res_stack,0.5961619591019224,/seg_base/universeg_config/log/24-05-17_13-25.log
+universeg_config/res_stack_topk,0.6083057140886028,/seg_base/universeg_config/log/24-05-17_14-05.log
+universeg_config/res_stack_se,0.6037938554821285,/seg_base/universeg_config/log/24-05-17_14-56.log

@@ -1,0 +1,8 @@
+2024-05-17 16:06:40,238 - mainlogger - INFO - 28633
+2024-05-17 16:06:40,238 - mainlogger - INFO - <class '__main__.UniversegPipeline'>
+2024-05-17 16:06:40,238 - mainlogger - INFO - full/res_stack_se.yaml
+2024-05-17 16:06:40,238 - mainlogger - INFO - {'desc': '加入se', 'batch_size': 8, 'epochs': 100, 'k': 2, 'test_k': 2, 'init': True, 'root_dir': '/Dataset_BUSI', 'model': {'name': 'universeg_res.universeg.UniverSeg', 'args': {'channels': [64, 128, 256, 512, 512], 'num_layers': [2, 2, 2, 2, 2], 'in_channels': [1, 2], 'init': True, 'act': 'ReLU'}}, 'trainset': {'name': 'datasetBUSI.mask_busi_single.MaskBUSISingle', 'args': {'root_dir': '/Dataset_BUSI', 'image_names_path': 'labeled_all.txt', 'mode': 'train'}}, 'testset': {'name': 'datasetBUSI.mask_busi_single.MaskBUSISingle', 'args': {'root_dir': '/Dataset_BUSI', 'image_names_path': 'test.txt', 'mode': 'test'}}, 'validset': {'name': 'datasetBUSI.mask_busi_single.MaskBUSISingle', 'args': {'root_dir': '/Dataset_BUSI', 'image_names_path': 'val.txt', 'mode': 'test'}}, 'criterion': {'name': 'spgutils.focalloss.BinaryFocalLoss', 'args': {'gamma': 1}}, 'optimizer': {'name': 'torch.optim.Adam', 'args': {'lr': 0.0001}}, 'scheduler': {'name': 'torch.optim.lr_scheduler.ReduceLROnPlateau', 'args': {'mode': 'max', 'factor': 0.85, 'patience': 3}}}
+2024-05-17 16:06:40,239 - mainlogger - INFO - 45.07077980041504
+2024-05-17 16:06:40,243 - mainlogger - INFO - init with relu
+2024-05-17 16:07:41,067 - mainlogger - INFO - Epoch 0  16.65463662147522
+2024-05-17 16:07:41,068 - mainlogger - INFO - ********************************************************************************

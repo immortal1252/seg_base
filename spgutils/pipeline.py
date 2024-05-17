@@ -68,6 +68,17 @@ class Pipeline:
         self.logger.info(self.config)
         self.logger.info(utils.get_pararms_num(self.model))
 
+        if self.config.get("init", False):
+            act = self.config["model"].get("act", "ReLU")
+            if act == "LeakyReLU":
+                act = "leaky_relu"
+            elif act == "ReLU":
+                act = "relu"
+            else:
+                raise Exception(f"no support init {act}")
+            utils.init_params(self.model, act)
+            self.logger.info(f"init with {act}")
+
     def prepare_data(self):
         batch_size = self.config["batch_size"]
         train_loader = DataLoader(self.trainset, batch_size=batch_size, shuffle=True)

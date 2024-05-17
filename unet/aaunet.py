@@ -55,7 +55,7 @@ class ChannelAttention(nn.Module):
             nn.BatchNorm1d(in_channels // r),
             nn.ReLU(inplace=True),
             nn.Linear(in_channels // r, in_channels, bias=False),
-            nn.Sigmoid()
+            nn.Sigmoid(),
         )
 
     def forward(self, x1, x2):
@@ -89,12 +89,12 @@ class HAAM(nn.Module):
     # Hybrid adaptive attention module
     def __init__(self, in_channels, out_channels, act="LeakyReLU"):
         super().__init__()
-        self.conv1 = ConvBNAct(in_channels, out_channels, 3, 1, act)
-        self.conv2 = ConvBNAct(in_channels, out_channels, 5, 1, act)
-        self.conv3 = ConvBNAct(in_channels, out_channels, 3, 3, act)
+        self.conv1 = ConvBNAct(in_channels, out_channels, 3, dilation=1, act=act)
+        self.conv2 = ConvBNAct(in_channels, out_channels, 5, dilation=1, act=act)
+        self.conv3 = ConvBNAct(in_channels, out_channels, 3, dilation=3, act=act)
         self.ca = ChannelAttention(out_channels)
         self.sa = SpatialAttention(out_channels)
-        self.out = ConvBNAct(out_channels, out_channels, 1, 1, act)
+        self.out = ConvBNAct(out_channels, out_channels, 1, act=act)
 
     def forward(self, x):
         x1 = self.conv1(x)

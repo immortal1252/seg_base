@@ -12,8 +12,8 @@ class Unet(nn.Module):
         self.encoder = nn.ModuleList()
         for channel in channels:
             block = nn.Sequential(
-                ConvBNAct(in_channels, channel, 3, 1, act),
-                ConvBNAct(channel, channel, 3, 1, act)
+                ConvBNAct(in_channels, channel, 3, act=act),
+                ConvBNAct(channel, channel, 3, act=act),
             )
             self.encoder.append(block)
             in_channels = channel
@@ -24,8 +24,8 @@ class Unet(nn.Module):
         for i in range(len(self.encoder) - 2, -1, -1):
             self.upsamples.append(Upsample(channels[i + 1], channels[i]))
             block = nn.Sequential(
-                ConvBNAct(channels[i] * 2, channels[i], 3, 1, act),
-                ConvBNAct(channels[i], channels[i], 3, 1, act),
+                ConvBNAct(channels[i] * 2, channels[i], 3, act=act),
+                ConvBNAct(channels[i], channels[i], 3, act=act),
             )
             self.decoder.append(block)
         self.downsample = nn.MaxPool2d(2, 2)
@@ -47,4 +47,3 @@ class Unet(nn.Module):
 
         x = self.out(x)
         return x
-
