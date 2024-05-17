@@ -20,8 +20,8 @@ class CrossConv2d(nn.Module):
             concat_channels = sum(two_channels)
         else:
             raise Exception("need tuple")
-        self.proj_u = ConvBNAct(two_channels[0], two_channels[0], 1)
-        self.proj_v = ConvBNAct(two_channels[1], two_channels[1], 1)
+        # self.proj_u = ConvBNAct(two_channels[0], two_channels[0], 1)
+        # self.proj_v = ConvBNAct(two_channels[1], two_channels[1], 1)
         self.conv = nn.Conv2d(
             in_channels=concat_channels,
             out_channels=out_channels,
@@ -39,14 +39,16 @@ class CrossConv2d(nn.Module):
         """
         B, Sx, *_ = u.shape
         _, Sy, *_ = v.shape
-        u = E.rearrange(u, "b s c h w -> (b s) c h w")
-        v = E.rearrange(v, "b s c h w -> (b s) c h w")
-        u = self.proj_u(u)
-        v = self.proj_v(v)
+        # u = E.rearrange(u, "b s c h w -> (b s) c h w")
+        # v = E.rearrange(v, "b s c h w -> (b s) c h w")
+        # u = self.proj_u(u)
+        # v = self.proj_v(v)
 
-        us = E.repeat(u, "(b sx) c h w -> b sx sy c h w", b=B, sx=Sx, sy=Sy)
-        vs = E.repeat(v, "(b sy) c h w -> b sx sy c h w", b=B, sx=Sx, sy=Sy)
+        # us = E.repeat(u, "(b sx) c h w -> b sx sy c h w", b=B, sx=Sx, sy=Sy)
+        # vs = E.repeat(v, "(b sy) c h w -> b sx sy c h w", b=B, sx=Sx, sy=Sy)
 
+        us = E.repeat(u, "b sx c h w -> b sx sy c h w", b=B, sx=Sx, sy=Sy)
+        vs = E.repeat(v, "b sy c h w -> b sx sy c h w", b=B, sx=Sx, sy=Sy)
         xy = torch.cat([us, vs], dim=3)
 
         batched_xy = E.rearrange(xy, "B Sx Sy C2 H W -> (B Sx Sy) C2 H W")
