@@ -65,3 +65,9 @@ universeg_config/res,0.6150412319153584,/seg_base/universeg_config/log/24-05-17_
 universeg_config/res_stack,0.5961619591019224,/seg_base/universeg_config/log/24-05-17_13-25.log
 universeg_config/res_stack_topk,0.6083057140886028,/seg_base/universeg_config/log/24-05-17_14-05.log
 universeg_config/res_stack_se,0.6037938554821285,/seg_base/universeg_config/log/24-05-17_14-56.log
+full/res_stack_se,0.7392169185146971,/seg_base/full/log/24-05-17_16-06.log
+full/universeg_base2_full,0.7493587864069897,/seg_base/full/log/24-05-17_17-58.log
+full/unet,0.7295504425247319,/seg_base/full/log/24-05-17_19-46.log
+full/skunet,0.5605832376578647,/seg_base/full/log/24-05-17_20-23.log
+full/aaunet,0.7161011312579106,/seg_base/full/log/24-05-17_21-13.log
+full/attnunet,0.7158126203268348,/seg_base/full/log/24-05-17_22-07.log
