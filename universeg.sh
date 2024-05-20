@@ -1,2 +1,2 @@
-python -u universeg_pipeline.py --path universeg_config/res_stack_se.yaml
+python -u universeg_pipeline.py --path full/res_stack_se2.yaml
 # shutdown -h now

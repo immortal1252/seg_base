@@ -71,3 +71,4 @@ full/unet,0.7295504425247319,/seg_base/full/log/24-05-17_19-46.log
 full/skunet,0.5605832376578647,/seg_base/full/log/24-05-17_20-23.log
 full/aaunet,0.7161011312579106,/seg_base/full/log/24-05-17_21-13.log
 full/attnunet,0.7158126203268348,/seg_base/full/log/24-05-17_22-07.log
+full/res_stack_se2,0.7534900037525045,/seg_base/full/log/24-05-20_16-34.log
