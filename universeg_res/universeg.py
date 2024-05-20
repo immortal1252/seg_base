@@ -72,13 +72,6 @@ class UniverSeg(nn.Module):
             self.decoders.append(block)
 
         self.out_conv = ConvBNAct(channels[0], out_channels, kernel_size=1, act="")
-        if init:
-            if act == "LeakyReLU":
-                spgutils.utils.init_params(self, "leaky_relu")
-            elif act == "ReLU":
-                spgutils.utils.init_params(self, "relu")
-            else:
-                raise Exception(f"no support init {act}")
 
     def forward(self, u, v, vy):
         """
