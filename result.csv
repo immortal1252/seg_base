@@ -76,3 +76,5 @@ full/bigger/res_stack_se,0.7524178999458644,/seg_base/full/bigger/log/24-05-20_2
 full/bigger/aaunet,0.7146361094011693,/seg_base/full/bigger/log/24-05-20_22-50.log
 full/bigger/attnunet,0.6795680675862938,/seg_base/full/bigger/log/24-05-21_00-07.log
 full/bigger/unet,0.6824855187254393,/seg_base/full/bigger/log/24-05-21_00-54.log
+full/res_stack_se/big_testk,0.7427315836661909,/seg_base/full/res_stack_se/log/24-05-21_12-18.log
+full/res_stack_se/leaky_relu,0.7443805497509421,/seg_base/full/res_stack_se/log/24-05-21_14-49.log

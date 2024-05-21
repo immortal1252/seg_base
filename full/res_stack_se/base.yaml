@@ -1,0 +1,53 @@
+desc: "学习率调大10倍，模型减小为单层"
+batch_size: 8
+epochs: 100
+k: 2
+test_k: 2
+init: true
+root_dir: &root_dir /Dataset_BUSI
+model:
+  name: universeg_res.universeg.UniverSeg
+  args:
+    channels: [64, 128, 256, 512, 512]
+    num_layers: [1, 1, 1, 1, 1]
+    in_channels: [1, 2]
+    init: true
+    act: ReLU
+
+trainset:
+  name: datasetBUSI.mask_busi_single.MaskBUSISingle
+  args:
+    root_dir: *root_dir
+    image_names_path: labeled_all.txt
+    mode: train
+
+testset:
+  name: datasetBUSI.mask_busi_single.MaskBUSISingle
+  args:
+    root_dir: *root_dir
+    image_names_path: test.txt
+    mode: test
+
+validset:
+  name: datasetBUSI.mask_busi_single.MaskBUSISingle
+  args:
+    root_dir: *root_dir
+    image_names_path: val.txt
+    mode: test
+
+criterion:
+  name: spgutils.focalloss.BinaryFocalLoss
+  args:
+    gamma: 1
+
+optimizer:
+  name: torch.optim.Adam
+  args:
+    lr: 0.001
+
+scheduler:
+  name: torch.optim.lr_scheduler.ReduceLROnPlateau
+  args:
+    mode: max
+    factor: 0.85
+    patience: 3

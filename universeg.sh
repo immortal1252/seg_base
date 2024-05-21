@@ -1,5 +1,3 @@
-python -u universeg_pipeline.py --path full/bigger/res_stack_se.yaml
-python -u supervised.py --path full/bigger/aaunet.yaml
-python -u supervised.py --path full/bigger/attnunet.yaml
-python -u supervised.py --path full/bigger/unet.yaml
+python -u universeg_pipeline.py --path full/res_stack_se/big_testk.yaml
+python -u universeg_pipeline.py --path full/res_stack_se/leaky_relu.yaml
 shutdown -h now
