@@ -94,11 +94,13 @@ class Pipeline:
     def train(self):
         train_loader, test_loader, valid_loader = self.prepare_data()
         epochs = self.config["epochs"]
-        dice = -1
+        test_dice = -1
+        valid_max_dice = -1  # 如果有验证集，使用验证集上的效果最好的那次进行测试，否则使用最好一次
 
         meter_queue = spgutils.meter_queue.MeterQueue(5)
         for epoch in tqdm(range(epochs)):
             loss = self.train_epoch(train_loader)
+            already_test = False
             if hasattr(self, "scheduler"):
                 if (
                     isinstance(self.scheduler, ReduceLROnPlateau)
@@ -108,6 +110,11 @@ class Pipeline:
                     self.logger.info("valid")
                     dice = self.evaluate(valid_loader)
                     meter_queue.append(dice, epoch)
+
+                    if dice > valid_max_dice:
+                        valid_max_dice = dice
+                        test_dice = self.evaluate(test_loader)
+                        already_test = True
 
                     old_lr = self.optimizer.param_groups[0]["lr"]
                     self.scheduler.step(dice)
@@ -121,13 +128,16 @@ class Pipeline:
             self.logger.info(f"Epoch {epoch}  {loss}")
             if epoch == epochs - 1 or epoch % 10 == 1:
                 self.logger.info("train")
-                dice = self.evaluate(train_loader)
+                self.evaluate(train_loader)
                 self.logger.info("test")
-                dice = self.evaluate(test_loader)
+                if not already_test:
+                    dice = self.evaluate(test_loader)
+                    if test_dice == -1:
+                        test_dice = dice
 
             self.logger.info("*" * 80)
 
-        self.post(meter_queue, dice)
+        self.post(meter_queue, test_dice)
 
     def post(self, meter_queue, dice):
         self.logger.info(meter_queue.get_best_epoch())
