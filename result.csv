@@ -72,3 +72,7 @@ full/skunet,0.5605832376578647,/seg_base/full/log/24-05-17_20-23.log
 full/aaunet,0.7161011312579106,/seg_base/full/log/24-05-17_21-13.log
 full/attnunet,0.7158126203268348,/seg_base/full/log/24-05-17_22-07.log
 full/res_stack_se2,0.7534900037525045,/seg_base/full/log/24-05-20_16-34.log
+full/bigger/res_stack_se,0.7524178999458644,/seg_base/full/bigger/log/24-05-20_20-56.log
+full/bigger/aaunet,0.7146361094011693,/seg_base/full/bigger/log/24-05-20_22-50.log
+full/bigger/attnunet,0.6795680675862938,/seg_base/full/bigger/log/24-05-21_00-07.log
+full/bigger/unet,0.6824855187254393,/seg_base/full/bigger/log/24-05-21_00-54.log

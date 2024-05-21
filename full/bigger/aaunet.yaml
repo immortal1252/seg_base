@@ -1,5 +1,5 @@
 desc: "big aaunet"
-batch_size: 8
+batch_size: 7
 epochs: 100
 k: 2
 init: true
@@ -7,7 +7,7 @@ root_dir: &root_dir /Dataset_BUSI
 model:
   name: unet.aaunet.AAUNet
   args:
-    channels: [64, 128, 256, 512, 1024]
+    channels: [64, 128, 256, 512, 512]
     act: LeakyReLU
 
 trainset:
