@@ -78,3 +78,5 @@ full/bigger/attnunet,0.6795680675862938,/seg_base/full/bigger/log/24-05-21_00-07
 full/bigger/unet,0.6824855187254393,/seg_base/full/bigger/log/24-05-21_00-54.log
 full/res_stack_se/big_testk,0.7427315836661909,/seg_base/full/res_stack_se/log/24-05-21_12-18.log
 full/res_stack_se/leaky_relu,0.7443805497509421,/seg_base/full/res_stack_se/log/24-05-21_14-49.log
+full/res_stack_se/big_testk,0.7361191092928373,/seg_base/full/res_stack_se/log/24-05-21_18-47.log
+full/res_stack_se/leaky_relu,0.7533019556993814,/seg_base/full/res_stack_se/log/24-05-21_21-19.log

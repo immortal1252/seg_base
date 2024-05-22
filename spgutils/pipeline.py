@@ -113,6 +113,7 @@ class Pipeline:
 
                     if dice > valid_max_dice:
                         valid_max_dice = dice
+                        self.logger.info("test")
                         test_dice = self.evaluate(test_loader)
                         already_test = True
 
