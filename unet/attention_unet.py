@@ -12,8 +12,8 @@ class AttentionUNet(nn.Module):
         self.encoder = nn.ModuleList()
         for channel in channels:
             block = nn.Sequential(
-                ConvBNAct(in_channels, channel, 3, 1, act),
-                ConvBNAct(channel, channel, 3, 1, act)
+                ConvBNAct(in_channels, channel, 3, act=act),
+                ConvBNAct(channel, channel, 3, act=act),
             )
             self.encoder.append(block)
             in_channels = channel
@@ -25,8 +25,8 @@ class AttentionUNet(nn.Module):
         for i in range(len(self.encoder) - 2, -1, -1):
             self.upsamples.append(Upsample(channels[i + 1], channels[i]))
             block = nn.Sequential(
-                ConvBNAct(channels[i] * 2, channels[i], 3, 1, act),
-                ConvBNAct(channels[i], channels[i], 3, 1, act),
+                ConvBNAct(channels[i] * 2, channels[i], 3, act=act),
+                ConvBNAct(channels[i], channels[i], 3, act=act),
             )
             self.decoder.append(block)
             attn = AttentionGate(channels[i])
@@ -57,10 +57,10 @@ class AttentionUNet(nn.Module):
 class AttentionGate(nn.Module):
     def __init__(self, in_channels, r=2):
         super().__init__()
-        self.convx = ConvBNAct(in_channels, in_channels // r, 1, 1, "")
-        self.convskip = ConvBNAct(in_channels, in_channels // r, 1, 1, "")
+        self.convx = ConvBNAct(in_channels, in_channels // r, 1, act="")
+        self.convskip = ConvBNAct(in_channels, in_channels // r, 1, act="")
 
-        self.conv = ConvBNAct(in_channels // r, in_channels, 1, 1, "Sigmoid")
+        self.conv = ConvBNAct(in_channels // r, in_channels, 1, act="Sigmoid")
 
     def forward(self, x, skip):
         # x和skip的长宽一样

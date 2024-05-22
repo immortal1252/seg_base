@@ -40,6 +40,7 @@ class UniversegPipeline(spgutils.pipeline.Pipeline):
             for _ in range(k)
         ]
 
+        test_k = int(self.config.get("test_k", k))
         assert isinstance(self.testset, Sized)  # escape warning
         support_loader_list_test = [
             DataLoader(
@@ -47,7 +48,7 @@ class UniversegPipeline(spgutils.pipeline.Pipeline):
                 sampler=FixedLengthSampler(self.trainset, len(self.testset)),
                 batch_size=batch_size,
             )
-            for _ in range(k)
+            for _ in range(test_k)
         ]
 
         test_loader = DataLoader(self.testset, batch_size=batch_size, shuffle=False)
@@ -63,7 +64,7 @@ class UniversegPipeline(spgutils.pipeline.Pipeline):
                     sampler=FixedLengthSampler(self.trainset, len(self.validset)),
                     batch_size=batch_size,
                 )
-                for _ in range(k)
+                for _ in range(test_k)
             ]
         else:
             valid_loader = None

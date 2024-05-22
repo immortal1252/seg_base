@@ -1,0 +1,1 @@
+python -u mnet_pipeline.py --path mnet_config/mnet.yaml

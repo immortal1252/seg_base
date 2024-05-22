@@ -34,7 +34,11 @@ class MeterQueue:
                 self._best_epoch = epoch
 
     def get_best_val(self):
+        if self._best_val is None:
+            return None
         return self._best_val / len(self._queue)
 
     def get_best_epoch(self):
+        if self._best_val is None:
+            return None
         return self._best_epoch - self._capacity + 1, self._best_epoch
