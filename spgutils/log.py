@@ -5,7 +5,7 @@ import os.path
 
 def new_logger(log_dir=""):
     logger = logging.getLogger("mainlogger")
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
 
     current_time = datetime.datetime.now().strftime("%y-%m-%d_%H-%M")
     log_filename = f"{current_time}.log"

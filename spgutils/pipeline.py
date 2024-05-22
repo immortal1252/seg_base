@@ -124,17 +124,18 @@ class Pipeline:
                 elif isinstance(self.scheduler, _LRScheduler):
                     self.scheduler.step()
 
-            self.logger.info("*" * 80)
-            if self.config.get("debug", False):
+            if self.config.get("debug", False) and epoch >= epochs * 0.3:
                 self.logger.debug("test")
                 dice = self.evaluate(test_loader)
                 test_dice_list.append(dice)
+
+            self.logger.info("*" * 80)
 
         self.logger.debug(valid_dice_list)
         self.logger.debug(test_dice_list)
 
         if valid_best_checkpoint is not None:
-            self.model.load_state_dict(torch.load(valid_best_checkpoint))
+            self.model.load_state_dict(valid_best_checkpoint)
         final_dice = self.evaluate(test_loader)
         self.post(final_dice)
 

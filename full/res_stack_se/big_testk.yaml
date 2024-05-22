@@ -1,9 +1,10 @@
 desc: "学习率调大10倍，模型减小为单层"
 batch_size: 8
-epochs: 120
+epochs: 100
 k: 2
 test_k: 4
 init: true
+debug: true
 root_dir: &root_dir /Dataset_BUSI
 model:
   name: universeg_res.universeg.UniverSeg
