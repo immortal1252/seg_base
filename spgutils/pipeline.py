@@ -53,7 +53,7 @@ class Pipeline:
                 cfg["name"], optimizer=self.optimizer, **cfg.get("args", {})
             )
             if isinstance(self.scheduler, ReduceLROnPlateau) and not hasattr(
-                self, "validset"
+                    self, "validset"
             ):
                 raise Exception("use ReduceLROnPlateau must provide validset")
 
@@ -69,7 +69,7 @@ class Pipeline:
         self.logger.info(utils.get_pararms_num(self.model))
 
         if self.config.get("init", False):
-            act = self.config["model"].get("act", "ReLU")
+            act = self.config["model"].get("args", {}).get("act", "ReLU")
             if act == "LeakyReLU":
                 act = "leaky_relu"
             elif act == "ReLU":
@@ -94,28 +94,26 @@ class Pipeline:
     def train(self):
         train_loader, test_loader, valid_loader = self.prepare_data()
         epochs = self.config["epochs"]
-        test_dice = -1
         valid_max_dice = -1  # 如果有验证集，使用验证集上的效果最好的那次进行测试，否则使用最好一次
+        valid_best_checkpoint = None
 
-        meter_queue = spgutils.meter_queue.MeterQueue(5)
+        test_dice_list = []
+        valid_dice_list = []
         for epoch in tqdm(range(epochs)):
             loss = self.train_epoch(train_loader)
-            already_test = False
+            self.logger.info(f"Epoch {epoch}  {loss}")
             if hasattr(self, "scheduler"):
                 if (
-                    isinstance(self.scheduler, ReduceLROnPlateau)
-                    and epoch >= epochs * 0.4
+                        isinstance(self.scheduler, ReduceLROnPlateau)
+                        and epoch >= epochs * 0.3
                 ):
                     assert valid_loader is not None  # escape warning
                     self.logger.info("valid")
                     dice = self.evaluate(valid_loader)
-                    meter_queue.append(dice, epoch)
-
+                    valid_dice_list.append(dice)
                     if dice > valid_max_dice:
                         valid_max_dice = dice
-                        self.logger.info("test")
-                        test_dice = self.evaluate(test_loader)
-                        already_test = True
+                        valid_best_checkpoint = self.model.state_dict()
 
                     old_lr = self.optimizer.param_groups[0]["lr"]
                     self.scheduler.step(dice)
@@ -126,23 +124,21 @@ class Pipeline:
                 elif isinstance(self.scheduler, _LRScheduler):
                     self.scheduler.step()
 
-            self.logger.info(f"Epoch {epoch}  {loss}")
-            if epoch == epochs - 1 or epoch % 10 == 1:
-                self.logger.info("train")
-                self.evaluate(train_loader)
-                self.logger.info("test")
-                if not already_test:
-                    dice = self.evaluate(test_loader)
-                    if test_dice == -1:
-                        test_dice = dice
-
             self.logger.info("*" * 80)
+            if self.config.get("debug", False):
+                self.logger.debug("test")
+                dice = self.evaluate(test_loader)
+                test_dice_list.append(dice)
 
-        self.post(meter_queue, test_dice)
+        self.logger.debug(valid_dice_list)
+        self.logger.debug(test_dice_list)
 
-    def post(self, meter_queue, dice):
-        self.logger.info(meter_queue.get_best_epoch())
-        self.logger.info(meter_queue.get_best_val())
+        if valid_best_checkpoint is not None:
+            self.model.load_state_dict(torch.load(valid_best_checkpoint))
+        final_dice = self.evaluate(test_loader)
+        self.post(final_dice)
+
+    def post(self, dice):
 
         df = pd.read_csv("./result.csv")
         log_name = ""
@@ -210,9 +206,5 @@ class Pipeline:
 
     @staticmethod
     def load(config_path: str):
-        with open(config_path, "r") as f:
+        with open(config_path, "r", encoding="utf8") as f:
             return yaml.load(f, Loader=yaml.FullLoader)
-
-
-if __name__ == "__main__":
-    a = Pipeline("a")
