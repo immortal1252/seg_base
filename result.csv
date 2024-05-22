@@ -57,3 +57,4 @@ unet_config/attnunet,0.6249755489708835,/seg_base/unet_config/log/24-05-15_16-52
 unet_config/skunet,0.6128525846717378,/seg_base/unet_config/log/24-05-15_21-27.log
 unet_config/skunet,0.5893927957113451,/seg_base/unet_config/log/24-05-15_21-49.log
 unet_config/attnunet,0.6458854800766914,/seg_base/unet_config/log/24-05-15_22-13.log
+unet_config/transunet,0.6642339722167026,/seg_base/unet_config/log/24-05-16_14-00.log
