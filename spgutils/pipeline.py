@@ -183,6 +183,8 @@ class Pipeline:
         return dice_avg
 
     def save_y_ypred(self, y: torch.Tensor, ypred: torch.Tensor, id: int):
+        if not os.path.exists("temp"):
+            os.mkdir("temp")
         y = y.cpu().float()
         ypred = ypred.cpu().float()
         for i in range(y.shape[0]):
