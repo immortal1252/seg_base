@@ -11,7 +11,7 @@ def new_logger(log_dir=""):
     log_filename = f"{current_time}.log"
 
     file_handler = logging.FileHandler(os.path.join(log_dir, log_filename), mode="w", encoding="utf8")
-    file_handler.setLevel(logging.INFO)
+    file_handler.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

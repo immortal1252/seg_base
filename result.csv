@@ -83,3 +83,5 @@ full/res_stack_se/big_testk,0.7361191092928373,/seg_base/full/res_stack_se/log/2
 full/res_stack_se/leaky_relu,0.7533019556993814,/seg_base/full/res_stack_se/log/24-05-21_21-19.log
 full/res_stack_se/big_testk,0.7613796200121181,/seg_base/full/res_stack_se/log/24-05-22_16-49.log
 full/res_stack_se/leaky_relu,0.7556562309064824,/seg_base/full/res_stack_se/log/24-05-22_19-20.log
+full/res_stack_se/big_testk,0.7543037584239902,/seg_base/full/res_stack_se/log/24-05-22_22-55.log
+full/res_stack_se/leaky_relu,0.7720688437420131,/seg_base/full/res_stack_se/log/24-05-23_01-28.log

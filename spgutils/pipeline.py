@@ -136,6 +136,7 @@ class Pipeline:
 
         if valid_best_checkpoint is not None:
             self.model.load_state_dict(valid_best_checkpoint)
+        self.logger.info("final test")
         final_dice = self.evaluate(test_loader)
         self.post(final_dice)
 
