@@ -1,3 +1,1 @@
-python -u universeg_pipeline.py --path full/res_stack_se/big_testk.yaml
-python -u universeg_pipeline.py --path full/res_stack_se/leaky_relu.yaml
-shutdown -h now
+python -u universeg_pipeline.py --path full/small_model_bigK/leaky_relu2.yaml

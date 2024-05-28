@@ -86,3 +86,8 @@ full/res_stack_se/leaky_relu,0.7556562309064824,/seg_base/full/res_stack_se/log/
 full/res_stack_se/big_testk,0.7543037584239902,/seg_base/full/res_stack_se/log/24-05-22_22-55.log
 full/res_stack_se/leaky_relu,0.7720688437420131,/seg_base/full/res_stack_se/log/24-05-23_01-28.log
 full/res_stack_se/leaky_relu_cla,0.7490016741907536,/seg_base/full/res_stack_se/log/24-05-23_15-47.log
+full/res_stack_se/leaky_relu,0.7393883171817506,/home/4T/zcr/seg_base/full/res_stack_se/log/24-05-24_14-24.log
+full/res_stack_se/leaky_relu,0.7519462787040732,/home/4T/zcr/seg_base/full/res_stack_se/log/24-05-24_15-33.log
+full/res_stack_se/leaky_relu,0.74026912730041,/home/4T/zcr/seg_base/full/res_stack_se/log/24-05-24_17-21.log
+full/small_model_bigK/leaky_relu,0.7273077368317279,/home/4T/zcr/seg_base/full/small_model_bigK/log/24-05-27_12-49.log
+full/small_model_bigK/leaky_relu2,0.7389034275053645,/home/4T/zcr/seg_base/full/small_model_bigK/log/24-05-27_18-36.log

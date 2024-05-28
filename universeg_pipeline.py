@@ -95,11 +95,8 @@ class UniversegPipeline(spgutils.pipeline.Pipeline):
             vs = vs.to(self.device)
             vys = vys.to(self.device)
 
-            try:
-                logits = self.model(u, vs, vys)
-            except Exception as e:
-                print(e)
-                pass
+            logits = self.model(u, vs, vys)
+
             loss = self.criterion(logits, uy)
             self.optimizer.zero_grad()
             loss.backward()

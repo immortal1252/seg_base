@@ -9,7 +9,7 @@ import spgutils.meter_queue
 import spgutils.log
 from spgutils import utils
 from torch.optim.optimizer import Optimizer
-from torch.optim.lr_scheduler import _LRScheduler, ReduceLROnPlateau
+from torch.optim.lr_scheduler import LRScheduler, ReduceLROnPlateau
 from torchvision.transforms import transforms
 from torch.utils.data import Dataset, DataLoader
 from torch import nn
@@ -49,11 +49,11 @@ class Pipeline:
             )
         if "scheduler" in config:
             cfg = config["scheduler"]
-            self.scheduler: Union[_LRScheduler, ReduceLROnPlateau] = utils.create(
+            self.scheduler: Union[LRScheduler, ReduceLROnPlateau] = utils.create(
                 cfg["name"], optimizer=self.optimizer, **cfg.get("args", {})
             )
             if isinstance(self.scheduler, ReduceLROnPlateau) and not hasattr(
-                    self, "validset"
+                self, "validset"
             ):
                 raise Exception("use ReduceLROnPlateau must provide validset")
 
@@ -104,8 +104,8 @@ class Pipeline:
             self.logger.info(f"Epoch {epoch}  {loss}")
             if hasattr(self, "scheduler"):
                 if (
-                        isinstance(self.scheduler, ReduceLROnPlateau)
-                        and epoch >= epochs * 0.3
+                    isinstance(self.scheduler, ReduceLROnPlateau)
+                    and epoch >= epochs * 0.3
                 ):
                     assert valid_loader is not None  # escape warning
                     self.logger.info("valid")
@@ -121,7 +121,7 @@ class Pipeline:
                     if old_lr != new_lr:
                         self.logger.info(f"{old_lr}->{new_lr}")
 
-                elif isinstance(self.scheduler, _LRScheduler):
+                elif isinstance(self.scheduler, LRScheduler):
                     self.scheduler.step()
 
             if self.config.get("debug", False) and epoch >= epochs * 0.3:
@@ -141,7 +141,6 @@ class Pipeline:
         self.post(final_dice)
 
     def post(self, dice):
-
         df = pd.read_csv("./result.csv")
         log_name = ""
         for handler in self.logger.handlers:

@@ -1,15 +1,15 @@
-desc: "学习率调大10倍，模型减小为单层"
-batch_size: 8
+desc: "稍微增大模型，减小k，保持testk"
+batch_size: 4
 epochs: 100
-k: 2
-test_k: 2
+k: 12
+test_k: 16
 init: true
 debug: true
 root_dir: &root_dir /home/4T/zcr/dataset/Dataset_BUSI
 model:
   name: universeg_res.universeg.UniverSeg
   args:
-    channels: [64, 128, 256, 512, 512]
+    channels: [64, 64, 64, 128, 128]
     num_layers: [1, 1, 1, 1, 1]
     in_channels: [1, 2]
     act: LeakyReLU
@@ -38,7 +38,7 @@ validset:
 criterion:
   name: spgutils.focalloss.BinaryFocalLoss
   args:
-    gamma: 1
+    gamma: 0
 
 optimizer:
   name: torch.optim.Adam
