@@ -91,3 +91,4 @@ full/res_stack_se/leaky_relu,0.7519462787040732,/home/4T/zcr/seg_base/full/res_s
 full/res_stack_se/leaky_relu,0.74026912730041,/home/4T/zcr/seg_base/full/res_stack_se/log/24-05-24_17-21.log
 full/small_model_bigK/leaky_relu,0.7273077368317279,/home/4T/zcr/seg_base/full/small_model_bigK/log/24-05-27_12-49.log
 full/small_model_bigK/leaky_relu2,0.7389034275053645,/home/4T/zcr/seg_base/full/small_model_bigK/log/24-05-27_18-36.log
+full/big_model_bigk/leaky_relu,0.7502579104464466,/home/4T/zcr/seg_base/full/big_model_bigk/log/24-05-28_10-53.log

@@ -41,7 +41,7 @@ class CrossBlock(nn.Module):
 
 
 class UniverSeg(nn.Module):
-    def __init__(self, channels, num_layers=None, in_channels=(1, 2), out_channels=1, act="LeakyReLU", init=True):
+    def __init__(self, channels, num_layers=None, in_channels=(1, 2), out_channels=1, act="LeakyReLU"):
         super().__init__()
         self.channels = channels
         if num_layers is None:

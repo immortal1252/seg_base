@@ -96,7 +96,7 @@ class UniversegPipeline(spgutils.pipeline.Pipeline):
             vys = vys.to(self.device)
 
             logits = self.model(u, vs, vys)
-
+            torch.cuda.empty_cache()
             loss = self.criterion(logits, uy)
             self.optimizer.zero_grad()
             loss.backward()
