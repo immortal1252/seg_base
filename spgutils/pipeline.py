@@ -157,7 +157,6 @@ class Pipeline:
 
     def evaluate(self, test_loader: DataLoader):
         self.model.eval()
-        eps = 1e-9
         metric_vector = dict()
         for batch_id, (x, y) in enumerate(test_loader):
             x = x.to(self.device)
