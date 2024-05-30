@@ -4,6 +4,7 @@ import pandas as pd
 import torch
 import yaml
 from tqdm import tqdm
+from medpy.metric import hd95
 
 import spgutils.meter_queue
 import spgutils.log
@@ -13,7 +14,7 @@ from torch.optim.lr_scheduler import LRScheduler, ReduceLROnPlateau
 from torchvision.transforms import transforms
 from torch.utils.data import Dataset, DataLoader
 from torch import nn
-from typing import Dict, Union
+from typing import Dict, Union, List
 from PIL import Image
 
 
@@ -57,6 +58,7 @@ class Pipeline:
             ):
                 raise Exception("use ReduceLROnPlateau must provide validset")
 
+        self.all_metric = config.get("all_metric", False)
         utils.seed_everything(42)
         log_dir = os.path.join(os.path.dirname(self.path), "log")
         if not os.path.exists(log_dir):
@@ -156,10 +158,14 @@ class Pipeline:
 
     def evaluate(self, test_loader: DataLoader):
         self.model.eval()
-        tp = 0
-        pixel_cnt = 0
-        intersection = 0
-        union = 0
+        eps = 1e-9
+        dice_v = []
+        jaccard_v = []
+        acc_v = []
+        pre_v = []
+        rec_v = []
+        spe_v = []
+        hd95_v = []
         for batch_id, (x, y) in enumerate(test_loader):
             x = x.to(self.device)
             y = y.to(self.device)
@@ -168,18 +174,55 @@ class Pipeline:
 
             y_pred = torch.where(y_pred > 0, 1, 0)
             self.save_y_ypred(y, y_pred, batch_id)
+            batch_size = int(y.shape[0])
+            if self.all_metric:
+                try:
+                    for i in range(batch_size):
+                        hd = hd95(y_pred[i].cpu().numpy(), y[i].cpu().numpy())
+                        hd95_v.append(hd)
+                except Exception as e:
+                    self.logger.debug(e)
 
-            intersection += torch.sum(y * y_pred).item()
-            union += torch.sum(y_pred + y).item()
-            tp += torch.sum(y_pred == y).item()
-            pixel_cnt += y.numel()
+            y = torch.flatten(y, 1)
+            y_pred = torch.flatten(y_pred, 1)
+            intersection = torch.sum(y * y_pred, 1)
+            union_sum = torch.sum(y_pred + y, 1)
+            dice = (2 * intersection + eps) / (union_sum + eps)
+            dice_v.append(dice)
+            if self.all_metric:
+                union_or = torch.sum(torch.logical_or(y_pred, y), 1)
+                tp = torch.sum((y == 1) == (y_pred == 1), 1)
+                fp = torch.sum((y == 0) == (y_pred == 1), 1)
+                tn = torch.sum((y == 0) == (y_pred == 0), 1)
+                fn = torch.sum((y == 1) == (y_pred == 0), 1)
+                jaccard = (intersection + eps) / (union_or + eps)
+                acc = (tp + tn) / (tp + tn + fp + fn + eps)
+                pre = tp / (tp + fp + eps)
+                rec = tp / (tp + fn + eps)
+                spe = tn / (tn + fp + eps)
+                jaccard_v.append(jaccard)
+                acc_v.append(acc)
+                pre_v.append(pre)
+                rec_v.append(rec)
+                spe_v.append(spe)
 
-        dice_avg = (2 * intersection + 1e-9) / (union + 1e-9)
-        acc_avg = tp / pixel_cnt
-        self.logger.info(f"Dice score: {dice_avg:.4}")
-        self.logger.info(f"Accuracy: {acc_avg:.4}")
+        def print_mean_std(value: List[torch.Tensor], name: str):
+            value = torch.cat(value, 0)
+            value_mean = value.mean(0)
+            value_std = value.std(0)
+            self.logger.info(f"{name}_mean: {value_mean:.4}")
+            self.logger.info(f"{name}_std: {value_std:.4}")
+            return value_mean, value_std
 
-        return dice_avg
+        dice_mean, dice_std = print_mean_std(dice_v, "dice")
+        if self.all_metric:
+            print_mean_std(jaccard_v, "jaccard")
+            print_mean_std(acc_v, "acc")
+            print_mean_std(pre_v, "pre")
+            print_mean_std(rec_v, "rec")
+            print_mean_std(spe_v, "spe")
+
+        return dice_mean
 
     def save_y_ypred(self, y: torch.Tensor, ypred: torch.Tensor, id: int):
         if not os.path.exists("temp"):
