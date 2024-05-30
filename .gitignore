@@ -5,3 +5,6 @@ __pycache__/
 *.png
 *.out
 temp
+*DS_Store*
+*zip
+.keep

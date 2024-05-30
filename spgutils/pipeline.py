@@ -181,8 +181,8 @@ class Pipeline:
         dice = -1
         for k, v in metric_vector.items():
             values = torch.cat(v, 0)
-            values_mean = values.mean(0)
-            values_std = values.std(0)
+            values_mean = values.mean(0).item()
+            values_std = values.std(0).item()
             if k == "dice":
                 dice = values_mean
             self.logger.info(f"{k}: {values_mean:.4}±{values_std:.4}")

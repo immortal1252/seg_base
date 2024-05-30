@@ -1,0 +1,1 @@
+python -u supervised.py --path lxb/aaunet.yaml

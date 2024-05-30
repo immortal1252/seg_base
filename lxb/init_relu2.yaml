@@ -1,0 +1,39 @@
+desc: "first"
+batch_size: 10
+epochs: 100
+k: 10
+init: true
+model:
+  name: universeg_batchnorm.universeg.UniverSeg
+  args:
+    channels: [16, 32, 64, 128, 256]
+    in_channels: [3, 4]
+    act: ReLU
+
+criterion:
+  name: spgutils.focalloss.BinaryFocalLoss
+  args:
+    gamma: 0
+
+optimizer:
+  name: torch.optim.Adam
+  args:
+    lr: 0.0001
+
+trainset:
+  name: lxb.dataset.DataSets.BreastDataset
+  args:
+    path: lxb/data/train
+    phase: train
+
+testset:
+  name: lxb.dataset.DataSets.BreastDataset
+  args:
+    path: lxb/data/val
+    phase: test
+
+scheduler:
+  name: torch.optim.lr_scheduler.StepLR
+  args:
+    step_size: 1
+    gamma: 0.97
