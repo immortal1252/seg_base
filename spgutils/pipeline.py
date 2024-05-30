@@ -4,7 +4,7 @@ import pandas as pd
 import torch
 import yaml
 from tqdm import tqdm
-
+import spgutils.metric
 import spgutils.meter_queue
 import spgutils.log
 from spgutils import utils
@@ -13,7 +13,7 @@ from torch.optim.lr_scheduler import LRScheduler, ReduceLROnPlateau
 from torchvision.transforms import transforms
 from torch.utils.data import Dataset, DataLoader
 from torch import nn
-from typing import Dict, Union
+from typing import Dict, Union, List
 from PIL import Image
 
 
@@ -57,6 +57,7 @@ class Pipeline:
             ):
                 raise Exception("use ReduceLROnPlateau must provide validset")
 
+        self.all_metric = config.get("all_metric", False)
         utils.seed_everything(42)
         log_dir = os.path.join(os.path.dirname(self.path), "log")
         if not os.path.exists(log_dir):
@@ -156,10 +157,8 @@ class Pipeline:
 
     def evaluate(self, test_loader: DataLoader):
         self.model.eval()
-        tp = 0
-        pixel_cnt = 0
-        intersection = 0
-        union = 0
+        eps = 1e-9
+        metric_vector = dict()
         for batch_id, (x, y) in enumerate(test_loader):
             x = x.to(self.device)
             y = y.to(self.device)
@@ -168,18 +167,23 @@ class Pipeline:
 
             y_pred = torch.where(y_pred > 0, 1, 0)
             self.save_y_ypred(y, y_pred, batch_id)
+            with torch.no_grad():
+                metric = spgutils.metric.compute_metric(y_pred, y, self.all_metric)
 
-            intersection += torch.sum(y * y_pred).item()
-            union += torch.sum(y_pred + y).item()
-            tp += torch.sum(y_pred == y).item()
-            pixel_cnt += y.numel()
+            for k, v in metric.items():
+                metric_vector.setdefault(k, []).append(v)
 
-        dice_avg = (2 * intersection + 1e-9) / (union + 1e-9)
-        acc_avg = tp / pixel_cnt
-        self.logger.info(f"Dice score: {dice_avg:.4}")
-        self.logger.info(f"Accuracy: {acc_avg:.4}")
+        dice = -1
+        for k, v in metric_vector.items():
+            values = torch.cat(v, 0)
+            values_mean = values.mean(0)
+            values_std = values.std(0)
+            if k == "dice":
+                dice = values_mean
+            self.logger.info(f"{k}_mean: {values_mean:.4}")
+            self.logger.info(f"{k}_std: {values_std:.4}")
 
-        return dice_avg
+        return dice
 
     def save_y_ypred(self, y: torch.Tensor, ypred: torch.Tensor, id: int):
         if not os.path.exists("temp"):
