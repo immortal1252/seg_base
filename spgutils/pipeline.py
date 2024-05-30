@@ -4,7 +4,7 @@ import pandas as pd
 import torch
 import yaml
 from tqdm import tqdm
-
+import spgutils.metric
 import spgutils.meter_queue
 import spgutils.log
 from spgutils import utils
@@ -57,11 +57,12 @@ class Pipeline:
             ):
                 raise Exception("use ReduceLROnPlateau must provide validset")
 
+        self.all_metric = config.get("all_metric", False)
         utils.seed_everything(42)
-        log_dir = os.path.join(os.path.dirname(self.path), "log")
-        if not os.path.exists(log_dir):
-            os.mkdir(log_dir)
-        self.logger = spgutils.log.new_logger(log_dir)
+        self.log_dir = os.path.join(os.path.dirname(self.path), "log")
+        if not os.path.exists(self.log_dir):
+            os.mkdir(self.log_dir)
+        self.logger = spgutils.log.new_logger(self.log_dir)
         self.logger.info(os.getpid())
         self.logger.info(type(self))
         self.logger.info(self.path)
@@ -99,6 +100,7 @@ class Pipeline:
 
         test_dice_list = []
         valid_dice_list = []
+        self.evaluate(test_loader)
         for epoch in tqdm(range(epochs)):
             loss = self.train_epoch(train_loader)
             self.logger.info(f"Epoch {epoch}  {loss}")
@@ -138,9 +140,9 @@ class Pipeline:
             self.model.load_state_dict(valid_best_checkpoint)
         self.logger.info("final test")
         final_dice = self.evaluate(test_loader)
-        self.post(final_dice)
+        self.post(final_dice, valid_best_checkpoint)
 
-    def post(self, dice):
+    def post(self, dice, checkpoint=None):
         df = pd.read_csv("./result.csv")
         log_name = ""
         for handler in self.logger.handlers:
@@ -153,13 +155,15 @@ class Pipeline:
             "log": log_name,
         }
         df.to_csv("./result.csv", index=False)
+        if checkpoint is not None:
+            torch.save(
+                checkpoint,
+                os.path.join(self.log_dir, str(self.model.__class__) + ".pt"),
+            )
 
     def evaluate(self, test_loader: DataLoader):
         self.model.eval()
-        tp = 0
-        pixel_cnt = 0
-        intersection = 0
-        union = 0
+        metric_vector = dict()
         for batch_id, (x, y) in enumerate(test_loader):
             x = x.to(self.device)
             y = y.to(self.device)
@@ -168,18 +172,22 @@ class Pipeline:
 
             y_pred = torch.where(y_pred > 0, 1, 0)
             self.save_y_ypred(y, y_pred, batch_id)
+            with torch.no_grad():
+                metric = spgutils.metric.compute_metric(y_pred, y, self.all_metric)
 
-            intersection += torch.sum(y * y_pred).item()
-            union += torch.sum(y_pred + y).item()
-            tp += torch.sum(y_pred == y).item()
-            pixel_cnt += y.numel()
+            for k, v in metric.items():
+                metric_vector.setdefault(k, []).append(v)
 
-        dice_avg = (2 * intersection + 1e-9) / (union + 1e-9)
-        acc_avg = tp / pixel_cnt
-        self.logger.info(f"Dice score: {dice_avg:.4}")
-        self.logger.info(f"Accuracy: {acc_avg:.4}")
+        dice = -1
+        for k, v in metric_vector.items():
+            values = torch.cat(v, 0)
+            values_mean = values.mean(0)
+            values_std = values.std(0)
+            if k == "dice":
+                dice = values_mean
+            self.logger.info(f"{k}: {values_mean:.4}±{values_std:.4}")
 
-        return dice_avg
+        return dice
 
     def save_y_ypred(self, y: torch.Tensor, ypred: torch.Tensor, id: int):
         if not os.path.exists("temp"):
