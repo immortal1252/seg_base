@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 import torch.utils.data.sampler
 import random
 import spgutils.pipeline
+import spgutils.metric
 from typing import Sized
 
 
@@ -108,10 +109,7 @@ class UniversegPipeline(spgutils.pipeline.Pipeline):
         test_loader, support_loader_list = test_support_loader
         support_loader = zip(*support_loader_list)
         self.model.eval()
-        tp = 0
-        pixel_cnt = 0
-        intersection = 0
-        union = 0
+        metric_vector = dict()
         for batch_id, ((u, uy), (v_vy_tuples)) in enumerate(
             zip(test_loader, support_loader)
         ):
@@ -130,18 +128,10 @@ class UniversegPipeline(spgutils.pipeline.Pipeline):
 
             y_pred = torch.where(y_pred > 0, 1, 0)
             self.save_y_ypred(uy, y_pred, batch_id)
-
-            intersection += torch.sum(uy * y_pred).item()
-            union += torch.sum(y_pred + uy).item()
-            tp += torch.sum(y_pred == uy).item()
-            pixel_cnt += uy.numel()
-
-        dice_avg = (2 * intersection + 1e-9) / (union + 1e-9)
-        acc_avg = tp / pixel_cnt
-        self.logger.info(f"Dice score: {dice_avg:.4}")
-        self.logger.info(f"Accuracy: {acc_avg:.4}")
-
-        return dice_avg
+            self.collect(y_pred, uy, metric_vector)
+        
+        dice = self.merge(metric_vector)
+        return dice
 
 
 if __name__ == "__main__":

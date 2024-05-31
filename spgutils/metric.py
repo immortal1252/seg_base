@@ -30,28 +30,28 @@ def compute_metric(
         except Exception as e:
             print(e)
 
-        eps = 1e-10
-        y = torch.flatten(y, 1)
-        y_pred = torch.flatten(y_pred, 1)
-        intersection = torch.sum(y * y_pred, 1)
-        union_sum = torch.sum(y_pred + y, 1)
-        dice = (2 * intersection + eps) / (union_sum + eps)
-        ret["dice"] = dice
-        if all_metric:
-            union_or = torch.sum(torch.logical_or(y_pred, y), 1)
-            tp = torch.sum((y == 1) == (y_pred == 1), 1)
-            fp = torch.sum((y == 0) == (y_pred == 1), 1)
-            tn = torch.sum((y == 0) == (y_pred == 0), 1)
-            fn = torch.sum((y == 1) == (y_pred == 0), 1)
-            jaccard = (intersection + eps) / (union_or + eps)
-            acc = (tp + tn) / (tp + tn + fp + fn + eps)
-            pre = tp / (tp + fp + eps)
-            rec = tp / (tp + fn + eps)
-            spe = tn / (tn + fp + eps)
-            ret["jaccard"] = jaccard
-            ret["acc"] = acc
-            ret["pre"] = pre
-            ret["rec"] = rec
-            ret["spe"] = spe
+    eps = 1e-10
+    y = torch.flatten(y, 1)
+    y_pred = torch.flatten(y_pred, 1)
+    intersection = torch.sum(y * y_pred, 1)
+    union_sum = torch.sum(y_pred + y, 1)
+    dice = (2 * intersection + eps) / (union_sum + eps)
+    ret["dice"] = dice
+    if all_metric:
+        union_or = torch.sum(torch.logical_or(y_pred, y), 1)
+        tp = torch.sum((y == 1) == (y_pred == 1), 1)
+        fp = torch.sum((y == 0) == (y_pred == 1), 1)
+        tn = torch.sum((y == 0) == (y_pred == 0), 1)
+        fn = torch.sum((y == 1) == (y_pred == 0), 1)
+        jaccard = (intersection + eps) / (union_or + eps)
+        acc = (tp + tn) / (tp + tn + fp + fn + eps)
+        pre = tp / (tp + fp + eps)
+        rec = tp / (tp + fn + eps)
+        spe = tn / (tn + fp + eps)
+        ret["jaccard"] = jaccard
+        ret["acc"] = acc
+        ret["pre"] = pre
+        ret["rec"] = rec
+        ret["spe"] = spe
 
     return ret
