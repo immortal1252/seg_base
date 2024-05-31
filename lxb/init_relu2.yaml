@@ -3,6 +3,7 @@ batch_size: 10
 epochs: 100
 k: 10
 init: true
+all_metric: true
 model:
   name: universeg_batchnorm.universeg.UniverSeg
   args:
