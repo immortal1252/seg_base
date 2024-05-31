@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 import torch.utils.data.sampler
 import random
 import spgutils.pipeline
+import spgutils.metric
 from typing import Sized
 
 
@@ -108,10 +109,7 @@ class UniversegPipeline(spgutils.pipeline.Pipeline):
         test_loader, support_loader_list = test_support_loader
         support_loader = zip(*support_loader_list)
         self.model.eval()
-        tp = 0
-        pixel_cnt = 0
-        intersection = 0
-        union = 0
+        metric_vector = dict()
         for batch_id, ((u, uy), (v_vy_tuples)) in enumerate(
             zip(test_loader, support_loader)
         ):
@@ -130,18 +128,21 @@ class UniversegPipeline(spgutils.pipeline.Pipeline):
 
             y_pred = torch.where(y_pred > 0, 1, 0)
             self.save_y_ypred(uy, y_pred, batch_id)
+            with torch.no_grad():
+                metric = spgutils.metric.compute_metric(y_pred, uy, self.all_metric)
+            for k, v in metric.items():
+                metric_vector.setdefault(k, []).append(v)
 
-            intersection += torch.sum(uy * y_pred).item()
-            union += torch.sum(y_pred + uy).item()
-            tp += torch.sum(y_pred == uy).item()
-            pixel_cnt += uy.numel()
+        dice = -1
+        for k, v in metric_vector.items():
+            values = torch.cat(v, 0)
+            values_mean = values.mean(0).item()
+            values_std = values.std(0).item()
+            if k == "dice":
+                dice = values_mean
+            self.logger.info(f"{k}: {values_mean:.4}±{values_std:.4}")
 
-        dice_avg = (2 * intersection + 1e-9) / (union + 1e-9)
-        acc_avg = tp / pixel_cnt
-        self.logger.info(f"Dice score: {dice_avg:.4}")
-        self.logger.info(f"Accuracy: {acc_avg:.4}")
-
-        return dice_avg
+        return dice
 
 
 if __name__ == "__main__":
