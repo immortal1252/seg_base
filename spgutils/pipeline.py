@@ -13,7 +13,7 @@ from torch.optim.lr_scheduler import LRScheduler, ReduceLROnPlateau
 from torchvision.transforms import transforms
 from torch.utils.data import Dataset, DataLoader
 from torch import nn
-from typing import Dict, Union
+from typing import Dict, List, Union
 from PIL import Image
 import os.path as op
 
@@ -54,7 +54,7 @@ class Pipeline:
                 cfg["name"], optimizer=self.optimizer, **cfg.get("args", {})
             )
             if isinstance(self.scheduler, ReduceLROnPlateau) and not hasattr(
-                self, "validset"
+                    self, "validset"
             ):
                 raise Exception("use ReduceLROnPlateau must provide validset")
 
@@ -94,6 +94,9 @@ class Pipeline:
         return train_loader, test_loader, valid_loader
 
     def train(self):
+        """
+        主循环，先调用prepare_data获取三个dataloader，然后调用train_epoch和evaluate，最后调用post
+        """
         train_loader, test_loader, valid_loader = self.prepare_data()
         epochs = self.config["epochs"]
         valid_max_dice = -1  # 如果有验证集，使用验证集上的效果最好的那次进行测试，否则使用最好一次
@@ -107,8 +110,8 @@ class Pipeline:
             self.logger.info(f"Epoch {epoch}  {loss}")
             if hasattr(self, "scheduler"):
                 if (
-                    isinstance(self.scheduler, ReduceLROnPlateau)
-                    and epoch >= epochs * 0.3
+                        isinstance(self.scheduler, ReduceLROnPlateau)
+                        and epoch >= epochs * 0.3
                 ):
                     assert valid_loader is not None  # escape warning
                     self.logger.info("valid")
@@ -166,7 +169,30 @@ class Pipeline:
             op.join(self.log_dir, filename)
         )
 
-    def evaluate(self, test_loader):
+    def collect(
+            self,
+            y_pred: torch.Tensor,
+            y: torch.Tensor,
+            vector_list: Dict[str, List[torch.Tensor]],
+    ):
+        with torch.no_grad():
+            metric = spgutils.metric.compute_metric(y_pred, y, self.all_metric)
+
+        for k, v in metric.items():
+            vector_list.setdefault(k, []).append(v)
+
+    def merge(self, vector_list: Dict[str, List[torch.Tensor]]):
+        dice = -1
+        for k, v in vector_list.items():
+            values = torch.cat(v, 0)
+            values_mean = values.mean(0).item()
+            values_std = values.std(0).item()
+            if k == "dice":
+                dice = values_mean
+            self.logger.info(f"{k}: {values_mean:.4}±{values_std:.4}")
+        return dice
+
+    def evaluate(self, test_loader: DataLoader):
         self.model.eval()
         metric_vector = dict()
         for batch_id, (x, y) in enumerate(test_loader):
@@ -177,21 +203,9 @@ class Pipeline:
 
             y_pred = torch.where(y_pred > 0, 1, 0)
             self.save_y_ypred(y, y_pred, batch_id)
-            with torch.no_grad():
-                metric = spgutils.metric.compute_metric(y_pred, y, self.all_metric)
+            self.collect(y_pred, y, metric_vector)
 
-            for k, v in metric.items():
-                metric_vector.setdefault(k, []).append(v)
-
-        dice = -1
-        for k, v in metric_vector.items():
-            values = torch.cat(v, 0)
-            values_mean = values.mean(0).item()
-            values_std = values.std(0).item()
-            if k == "dice":
-                dice = values_mean
-            self.logger.info(f"{k}: {values_mean:.4}±{values_std:.4}")
-
+        dice = self.merge(metric_vector)
         return dice
 
     def save_y_ypred(self, y: torch.Tensor, ypred: torch.Tensor, id: int):

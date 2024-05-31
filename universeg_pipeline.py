@@ -128,20 +128,9 @@ class UniversegPipeline(spgutils.pipeline.Pipeline):
 
             y_pred = torch.where(y_pred > 0, 1, 0)
             self.save_y_ypred(uy, y_pred, batch_id)
-            with torch.no_grad():
-                metric = spgutils.metric.compute_metric(y_pred, uy, self.all_metric)
-            for k, v in metric.items():
-                metric_vector.setdefault(k, []).append(v)
-
-        dice = -1
-        for k, v in metric_vector.items():
-            values = torch.cat(v, 0)
-            values_mean = values.mean(0).item()
-            values_std = values.std(0).item()
-            if k == "dice":
-                dice = values_mean
-            self.logger.info(f"{k}: {values_mean:.4}±{values_std:.4}")
-
+            self.collect(y_pred, uy, metric_vector)
+        
+        dice = self.merge(metric_vector)
         return dice
 
 
