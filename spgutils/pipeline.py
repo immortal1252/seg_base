@@ -15,6 +15,7 @@ from torch.utils.data import Dataset, DataLoader
 from torch import nn
 from typing import Dict, Union
 from PIL import Image
+import os.path as op
 
 
 class Pipeline:
@@ -138,11 +139,14 @@ class Pipeline:
 
         if valid_best_checkpoint is not None:
             self.model.load_state_dict(valid_best_checkpoint)
+        else:
+            valid_best_checkpoint = self.model.state_dict()
         self.logger.info("final test")
+        self.all_metric = True
         final_dice = self.evaluate(test_loader)
         self.post(final_dice, valid_best_checkpoint)
 
-    def post(self, dice, checkpoint=None):
+    def post(self, dice, checkpoint):
         df = pd.read_csv("./result.csv")
         log_name = ""
         for handler in self.logger.handlers:
@@ -155,13 +159,14 @@ class Pipeline:
             "log": log_name,
         }
         df.to_csv("./result.csv", index=False)
-        if checkpoint is not None:
-            torch.save(
-                checkpoint,
-                os.path.join(self.log_dir, str(self.model.__class__) + ".pt"),
-            )
+        basename = op.basename(self.path)
+        filename = basename.split(".")[0] + ".pt"
+        torch.save(
+            checkpoint,
+            op.join(self.log_dir, filename)
+        )
 
-    def evaluate(self, test_loader: DataLoader):
+    def evaluate(self, test_loader):
         self.model.eval()
         metric_vector = dict()
         for batch_id, (x, y) in enumerate(test_loader):
